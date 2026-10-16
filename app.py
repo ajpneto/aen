@@ -11,7 +11,7 @@ EMPRESA = {
     "cidade": "Ourinhos - SP",
     "whatsapp": "5541984512660",
     "whatsapp_display": "(41) 98451-2660",
-    "email": "contato@aentech.org",
+    "email": "contato@fazhoje.com",
     "endereco": "Ourinhos - SP",
     "horario": "Seg a Sáb — 09h às 19h",
     "garantia_dias": 90,
