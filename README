@@ -1,0 +1,93 @@
+🎯 Próximos passos sugeridos (quando quiser evoluir)
+🔐 1. Segurança básica
+Gerar uma SECRET_KEY forte e colocar em .env:
+
+bash
+python -c "import secrets; print(secrets.token_hex(32))"
+Remover debug=True do app.run() (não afeta produção, mas é boa prática).
+
+Criar .gitignore se ainda não tem:
+
+text
+.venv/
+__pycache__/
+*.pyc
+.env
+*.log
+⚡ 2. Performance
+Configurar Static Files no painel (você provavelmente já fez — confirme):
+
+URL: /static/ → Directory: /home/aen/aen/static
+
+Considerar WhiteNoise para servir estáticos direto do Flask (opcional, já que o PythonAnywhere resolve nativamente).
+
+📊 3. Funcionalidades extras
+Formulário de Ordem de Serviço com SQLite (fluxo completo: cliente → aparelho → defeito → status)
+
+Painel admin simples para acompanhar OS
+
+Integração com e-mail (via SMTP) para notificar orçamentos aprovados
+
+Google Analytics / Meta Pixel para medir conversões dos botões do WhatsApp
+
+🎨 4. Melhorias visuais
+Adicionar fotos reais de consertos (antes/depois)
+
+Seção de "Antes e Depois" com slider de comparação
+
+Google Reviews embed para reforçar prova social
+
+Botão "Avaliar no Google" após o serviço
+
+🔍 5. SEO local (Ourinhos-SP)
+Cadastrar no Google Meu Negócio (crucial para busca local!)
+
+Adicionar Schema.org JSON-LD com tipo LocalBusiness:
+
+html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "AENTECH",
+  "address": {"@type": "PostalAddress", "addressLocality": "Ourinhos", "addressRegion": "SP"},
+  "telephone": "+5541984512660"
+}
+</script>
+Meta tags og:image apontando para uma imagem real
+
+💡 Dica de ouro para manutenção
+Crie um script de deploy em ~/deploy.sh:
+
+bash
+#!/bin/bash
+set -e
+
+cd ~/aen
+source .venv/bin/activate
+
+echo "📥 Atualizando código..."
+git pull
+
+echo "📦 Instalando dependências..."
+pip install -r requirements.txt
+
+echo "🔄 Recarregando app..."
+touch /var/www/aen_pythonanywhere_com_wsgi.py
+
+echo "✅ Deploy concluído!"
+Torne executável:
+
+bash
+chmod +x ~/deploy.sh
+Agora, sempre que quiser atualizar o site após um git push, basta rodar:
+
+bash
+~/deploy.sh
+🚀 Resumo
+Seu site está no ar, funcional e pronto para receber visitantes. O próximo passo natural é começar a divulgar (Instagram, Google Meu Negócio, panfletos com QR Code para o site) e monitorar o comportamento dos visitantes para otimizar conversões.
+
+Foi um prazer resolver isso com você! Se quiser implementar qualquer uma das melhorias acima — especialmente o formulário de OS com SQLite ou o Schema.org para SEO local — é só chamar. 🛠️✨
+
+Bom trabalho e boa sorte com a AENTECH! 🎉
+

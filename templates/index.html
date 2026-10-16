@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ empresa.nome }} — Assistência Técnica de Celulares em {{ empresa.cidade }}</title>
+    <meta name="description" content="Conserto de celulares e tablets em {{ empresa.cidade }}. Troca de tela, bateria, conector de carga e mais. Diagnóstico grátis e garantia de {{ empresa.garantia_dias }} dias.">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{{ empresa.nome }} — Assistência Técnica de Celulares">
+    <meta property="og:description" content="Conserto rápido, com garantia e preço justo em {{ empresa.cidade }}.">
+    <meta property="og:type" content="website">
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS custom -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top shadow-sm" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="#home">
+            <i class="fas fa-mobile-screen-button text-brand-accent me-2"></i>
+            <span class="text-brand-accent">{{ empresa.nome }}</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-label="Menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMenu">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+                <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+                <li class="nav-item"><a class="nav-link" href="#como-funciona">Como Funciona</a></li>
+                <li class="nav-item"><a class="nav-link" href="#depoimentos">Depoimentos</a></li>
+                <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+                <li class="nav-item ms-lg-3">
+                    <a href="https://wa.me/{{ empresa.whatsapp }}?text=Olá%20{{ empresa.nome }}!%20Preciso%20de%20um%20orçamento."
+                       class="btn btn-success btn-sm rounded-pill px-3">
+                        <i class="fab fa-whatsapp me-1"></i> Orçamento
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<section id="home" class="hero-section d-flex align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 text-white hero-content">
+                <span class="badge bg-brand-accent mb-3 px-3 py-2">
+                    <i class="fas fa-star me-1"></i> Nota 4.9 • {{ empresa.cidade }}
+                </span>
+                <h1 class="display-4 fw-bold mb-3">
+                    Seu Celular Quebrado?<br>
+                    <span class="text-brand-accent">Consertamos Rápido e com Garantia!</span>
+                </h1>
+                <p class="lead mb-4">
+                    Diagnóstico <strong>GRATUITO</strong> • Peças de qualidade • Garantia de {{ empresa.garantia_dias }} dias por escrito.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="https://wa.me/{{ empresa.whatsapp }}?text=Olá%20{{ empresa.nome }}!%20Quero%20um%20orçamento%20grátis."
+                       class="btn btn-success btn-lg rounded-pill px-4 fw-semibold">
+                        <i class="fab fa-whatsapp me-2"></i>Solicitar Orçamento Grátis
+                    </a>
+                    <a href="tel:+{{ empresa.whatsapp }}" class="btn btn-outline-light btn-lg rounded-pill px-4">
+                        <i class="fas fa-phone me-2"></i>Ligar Agora
+                    </a>
+                </div>
+                <div class="row mt-5 g-3 text-center text-md-start">
+                    <div class="col-4">
+                        <h4 class="fw-bold text-brand-accent mb-0">+5.000</h4>
+                        <small>Aparelhos consertados</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fw-bold text-brand-accent mb-0">1h</h4>
+                        <small>Atendimento médio</small>
+                    </div>
+                    <div class="col-4">
+                        <h4 class="fw-bold text-brand-accent mb-0">{{ empresa.garantia_dias }}d</h4>
+                        <small>De garantia</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center hero-illustration d-none d-lg-block">
+                <div class="hero-circle">
+                    <i class="fas fa-mobile-screen-button"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= BARRA DE DIFERENCIAIS ================= -->
+<section class="py-4 bg-brand-light">
+    <div class="container">
+        <div class="row text-center g-3">
+            <div class="col-6 col-md-3">
+                <i class="fas fa-bolt fa-2x text-brand-primary mb-2"></i>
+                <p class="mb-0 fw-semibold small">Atendimento em até 1h</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-screwdriver-wrench fa-2x text-brand-primary mb-2"></i>
+                <p class="mb-0 fw-semibold small">Técnicos certificados</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-shield-halved fa-2x text-brand-primary mb-2"></i>
+                <p class="mb-0 fw-semibold small">Garantia de {{ empresa.garantia_dias }} dias</p>
+            </div>
+            <div class="col-6 col-md-3">
+                <i class="fas fa-credit-card fa-2x text-brand-primary mb-2"></i>
+                <p class="mb-0 fw-semibold small">Parcele em até 12x</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ================= SERVIÇOS ================= -->
+<section id="servicos" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-brand-accent fw-bold text-uppercase small">Nossos Serviços</span>
+            <h2 class="fw-bold mt-2">O que consertamos para você</h2>
+            <p class="text-muted">Soluções completas para smartphones e tablets de todas as marcas.</p>
+        </div>
+        <div class="row g-4">
+            {% for s in servicos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="icon-circle mb-3 mx-auto">
+                            <i class="fas {{ s.icone }}"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">{{ s.titulo }}</h5>
+                        <p class="text-muted small mb-4">{{ s.descricao }}</p>
+                        <a href="https://wa.me/{{ empresa.whatsapp }}?text={{ s.msg_whats | urlencode }}"
+                           class="btn btn-outline-success rounded-pill px-4">
+                            <i class="fab fa-whatsapp me-1"></i> Consertar Agora
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= COMO FUNCIONA ================= -->
+<section id="como-funciona" class="py-5 bg-brand-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-brand-accent fw-bold text-uppercase small">Processo Simples</span>
+            <h2 class="fw-bold mt-2">Como Funciona o Atendimento</h2>
+            <p class="text-muted">Em 3 passos simples você tem seu aparelho de volta.</p>
+        </div>
+        <div class="row g-4 position-relative">
+            {% for p in passos %}
+            <div class="col-md-4">
+                <div class="step-card text-center p-4 h-100 bg-white rounded-3 shadow-sm position-relative">
+                    <div class="step-number">{{ p.numero }}</div>
+                    <div class="icon-circle-lg mb-3 mx-auto">
+                        <i class="fas {{ p.icone }}"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">{{ p.titulo }}</h5>
+                    <p class="text-muted small mb-0">{{ p.descricao }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= DEPOIMENTOS ================= -->
+<section id="depoimentos" class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-brand-accent fw-bold text-uppercase small">Quem já testou</span>
+            <h2 class="fw-bold mt-2">O que nossos clientes dizem</h2>
+        </div>
+        <div class="row g-4">
+            {% for d in depoimentos %}
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm h-100 p-4">
+                    <div class="mb-3 text-warning">
+                        {% for _ in range(d.nota) %}<i class="fas fa-star"></i>{% endfor %}
+                    </div>
+                    <p class="text-muted fst-italic">"{{ d.texto }}"</p>
+                    <div class="d-flex align-items-center mt-3">
+                        <div class="avatar-circle me-3">
+                            {{ d.nome[0] }}
+                        </div>
+                        <div>
+                            <strong class="d-block">{{ d.nome }}</strong>
+                            <small class="text-muted">Cliente verificado</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= GARANTIA ================= -->
+<section class="py-5 bg-brand-primary text-white">
+    <div class="container text-center">
+        <i class="fas fa-shield-halved fa-3x text-brand-accent mb-3"></i>
+        <h2 class="fw-bold mb-3">Garantia de {{ empresa.garantia_dias }} dias em todos os serviços</h2>
+        <p class="lead mb-0 mx-auto" style="max-width: 720px;">
+            Peças originais ou compatíveis de alta qualidade. Se o problema voltar, consertamos novamente
+            <strong>sem custo adicional</strong> para você.
+        </p>
+    </div>
+</section>
+
+<!-- ================= MARCAS ================= -->
+<section class="py-4">
+    <div class="container">
+        <p class="text-center text-muted small text-uppercase mb-4">Atendemos todas as marcas</p>
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+            {% for m in marcas %}
+                <span class="brand-pill">{{ m }}</span>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section id="faq" class="py-5 bg-brand-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="text-brand-accent fw-bold text-uppercase small">Dúvidas Frequentes</span>
+            <h2 class="fw-bold mt-2">Perguntas Frequentes</h2>
+        </div>
+        <div class="accordion mx-auto" id="faqAccordion" style="max-width: 820px;">
+            {% for item in faq %}
+            <div class="accordion-item border-0 shadow-sm mb-3 rounded-3 overflow-hidden">
+                <h2 class="accordion-header">
+                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %} fw-semibold"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">
+                        {{ item.pergunta }}
+                    </button>
+                </h2>
+                <div id="faq{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body text-muted">
+                        {{ item.resposta }}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ================= CTA FINAL ================= -->
+<section class="py-5 cta-final text-white">
+    <div class="container text-center">
+        <h2 class="fw-bold mb-3">Não perca tempo! Seu celular novo de volta hoje mesmo.</h2>
+        <p class="lead mb-4">Fale com a {{ empresa.nome }} agora e receba seu orçamento em minutos.</p>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <a href="https://wa.me/{{ empresa.whatsapp }}?text=Olá%20{{ empresa.nome }}!%20Quero%20um%20orçamento."
+               class="btn btn-success btn-lg rounded-pill px-5 fw-semibold">
+                <i class="fab fa-whatsapp me-2"></i>Falar no WhatsApp
+            </a>
+            <a href="tel:+{{ empresa.whatsapp }}" class="btn btn-outline-light btn-lg rounded-pill px-5">
+                <i class="fas fa-phone me-2"></i>{{ empresa.whatsapp_display }}
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ================= RODAPÉ ================= -->
+<footer class="pt-5 pb-4 bg-dark text-white-50">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <h5 class="text-white fw-bold">
+                    <i class="fas fa-mobile-screen-button text-brand-accent me-2"></i>{{ empresa.nome }}
+                </h5>
+                <p class="small mt-3">{{ empresa.slogan }}.</p>
+                <p class="small mb-0"><i class="fas fa-map-marker-alt me-2 text-brand-accent"></i>{{ empresa.endereco }}</p>
+                <p class="small mb-0"><i class="fas fa-clock me-2 text-brand-accent"></i>{{ empresa.horario }}</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-white fw-bold mb-3">Contato</h6>
+                <p class="small mb-2">
+                    <i class="fab fa-whatsapp me-2 text-brand-accent"></i>
+                    <a href="https://wa.me/{{ empresa.whatsapp }}" class="text-white-50 text-decoration-none">
+                        {{ empresa.whatsapp_display }}
+                    </a>
+                </p>
+                <p class="small mb-2">
+                    <i class="fas fa-envelope me-2 text-brand-accent"></i>
+                    <a href="mailto:{{ empresa.email }}" class="text-white-50 text-decoration-none">{{ empresa.email }}</a>
+                </p>
+                <p class="small mb-0"><i class="fas fa-phone me-2 text-brand-accent"></i>{{ empresa.whatsapp_display }}</p>
+            </div>
+            <div class="col-md-4">
+                <h6 class="text-white fw-bold mb-3">Links Rápidos</h6>
+                <ul class="list-unstyled small">
+                    <li><a href="#servicos" class="text-white-50 text-decoration-none">Serviços</a></li>
+                    <li><a href="#como-funciona" class="text-white-50 text-decoration-none">Como Funciona</a></li>
+                    <li><a href="#faq" class="text-white-50 text-decoration-none">FAQ</a></li>
+                    <li><a href="#depoimentos" class="text-white-50 text-decoration-none">Depoimentos</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Mapa -->
+        <div class="mt-4 rounded-3 overflow-hidden">
+            <iframe
+                src="https://www.google.com/maps?q=Ourinhos,SP&output=embed"
+                width="100%" height="220" style="border:0;" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade" title="Localização {{ empresa.nome }}"></iframe>
+        </div>
+
+        <hr class="border-secondary my-4">
+        <div class="d-flex flex-wrap justify-content-between small">
+            <span>© {{ ano_atual }} {{ empresa.nome }} — Todos os direitos reservados.</span>
+            <span>CNPJ: 00.000.000/0001-00 • Política de Privacidade</span>
+        </div>
+    </div>
+</footer>
+
+<!-- Botão flutuante WhatsApp -->
+<a href="https://wa.me/{{ empresa.whatsapp }}?text=Olá%20{{ empresa.nome }}!%20Preciso%20de%20ajuda."
+   class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
