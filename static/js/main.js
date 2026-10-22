@@ -36,3 +36,29 @@ document.querySelectorAll('.service-card, .step-card, .card').forEach(el => {
     el.style.transition = 'opacity .6s ease, transform .6s ease';
     observer.observe(el);
 });
+
+// ===== Rastreamento de conversões no Google Analytics (cliques no WhatsApp e Telefone) =====
+document.querySelectorAll('a[href*="wa.me"]').forEach(button => {
+    button.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+            gtag('event', 'generate_lead', {
+                event_category: 'Engajamento',
+                event_label: button.innerText.trim() || 'Botão Flutuante WhatsApp',
+                method: 'WhatsApp'
+            });
+        }
+    });
+});
+
+document.querySelectorAll('a[href^="tel:"]').forEach(button => {
+    button.addEventListener('click', () => {
+        if (typeof gtag === 'function') {
+            gtag('event', 'contact', {
+                event_category: 'Engajamento',
+                event_label: button.innerText.trim() || 'Chamada Telefônica',
+                method: 'Phone'
+            });
+        }
+    });
+});
+
