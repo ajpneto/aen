@@ -1,0 +1,6 @@
+# robots.txt para https://fazhoje.com
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://fazhoje.com/sitemap.xml

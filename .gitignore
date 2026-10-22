@@ -9,3 +9,12 @@ venv/
 lib/
 bin/
 include/
+
+# Environment and IDE files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

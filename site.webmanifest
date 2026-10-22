@@ -1,0 +1,21 @@
+{
+  "name": "AENTECH — Assistência Técnica de Celulares e Tablets",
+  "short_name": "AENTECH",
+  "description": "Assistência técnica especializada em conserto de celulares e tablets em Ourinhos - SP.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0A2540",
+  "icons": [
+    {
+      "src": "./static/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./static/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
