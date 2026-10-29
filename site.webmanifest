@@ -1,11 +1,11 @@
 {
-  "name": "AENTECH — Assistência Técnica de Celulares e Tablets",
-  "short_name": "AENTECH",
-  "description": "Assistência técnica especializada em conserto de celulares e tablets em Ourinhos - SP.",
+  "name": "FazHoje — Soluções Tecnológicas, Ciência e Desenvolvimento",
+  "short_name": "FazHoje",
+  "description": "Plataforma de inovação: assistência técnica AENTEC, ciência cidadã AENTECH.ORG e engenharia de software AJPN.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0A2540",
+  "theme_color": "#2563eb",
   "icons": [
     {
       "src": "./static/android-chrome-192x192.png",

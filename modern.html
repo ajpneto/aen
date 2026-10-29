@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NCGCXV54CT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NCGCXV54CT');
+  </script>
+
+  <title>FazHoje — Inovação, Ciência e Soluções Tecnológicas</title>
+  <meta name="description" content="FazHoje conecta inovação prática, ciência e tecnologia: assistência técnica especializada em celulares AENTEC, ciência cidadã em IA para energia limpa na AENTECH.ORG e engenharia de software AJPN." />
+  <meta name="keywords" content="FazHoje, fazhoje.com, AENTEC, assistência técnica celulares, AENTECH, aentech.org, ciência cidadã, inteligência artificial, armazenamento de energia limpa, AJPN, desenvolvimento de software" />
+  <meta name="author" content="FazHoje" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://fazhoje.com/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="FazHoje" />
+  <meta property="og:title" content="FazHoje — Inovação, Ciência e Soluções Tecnológicas" />
+  <meta property="og:description" content="Inovação prática e de ponta: conheça a assistência técnica AENTEC, a plataforma de ciência cidadã AENTECH.ORG e o portfólio de engenharia de software AJPN." />
+  <meta property="og:url" content="https://fazhoje.com/" />
+  <meta property="og:locale" content="pt_BR" />
+  <meta property="og:image" content="https://fazhoje.com/static/og-brand.png" />
+  <meta property="og:image:secure_url" content="https://fazhoje.com/static/og-brand.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="FazHoje — Tecnologia, Inovação e Ciência" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="FazHoje — Inovação, Ciência e Soluções Tecnológicas" />
+  <meta name="twitter:description" content="Inovação prática e de ponta: assistência técnica AENTEC, pesquisa colaborativa AENTECH.ORG e engenharia de software AJPN." />
+  <meta name="twitter:image" content="https://fazhoje.com/static/og-brand.png" />
+  <meta name="twitter:image:alt" content="FazHoje — Tecnologia, Inovação e Ciência" />
+
+  <!-- Favicon & Mobile Icons -->
+  <link rel="shortcut icon" href="./static/favicon.ico" type="image/x-icon" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./static/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="./static/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="./static/apple-touch-icon.png" />
+  <link rel="manifest" href="./site.webmanifest" />
+  <meta name="theme-color" content="#2563eb" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "FazHoje",
+    "url": "https://fazhoje.com/",
+    "description": "Plataforma de inovação, ciência e tecnologia prática reunindo serviços especializados e projetos de pesquisa.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "FazHoje",
+      "logo": "https://fazhoje.com/static/og-brand.png"
+    },
+    "hasPart": [
+      {
+        "@type": "WebPage",
+        "name": "AENTEC - Assistência Técnica Especializada",
+        "url": "https://fazhoje.com/aentec"
+      },
+      {
+        "@type": "WebPage",
+        "name": "AENTECH.ORG - Ciência Cidadã & Energia Limpa",
+        "url": "https://aentech.org"
+      },
+      {
+        "@type": "WebPage",
+        "name": "AJPN - Página do Desenvolvedor",
+        "url": "https://ajpn.pythonanywhere.com"
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-10px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .slide-down {
+      animation: slideDown 0.3s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in-up {
+      animation: fadeInUp 0.7s ease-out forwards;
+    }
+
+    .bar {
+      transition: all 0.3s ease;
+    }
+    .bar1.open {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .bar2.open {
+      opacity: 0;
+    }
+    .bar3.open {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* Utilitários de status e formulário compatíveis */
+    .d-none {
+      display: none !important;
+    }
+    .alert {
+      padding: 0.875rem 1.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .alert-success {
+      background-color: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+    .alert-danger {
+      background-color: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 relative antialiased flex flex-col min-h-screen">
+
+  <!-- Navbar -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-black text-blue-600 tracking-tight flex items-center gap-2 hover:opacity-90 transition">
+        <span>FazHoje</span>
+      </a>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden md:flex items-center space-x-8 font-medium">
+        <a href="#" class="text-gray-700 hover:text-blue-600 transition">Início</a>
+        <a href="#portfolio" class="text-gray-700 hover:text-blue-600 transition">Projetos</a>
+        <a href="#testimonials" class="text-gray-700 hover:text-blue-600 transition">Diferenciais</a>
+        <a href="#contact" class="text-gray-700 hover:text-blue-600 transition">Contato</a>
+        <a href="#portfolio" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition shadow-sm">
+          Explorar
+        </a>
+      </nav>
+
+      <!-- Mobile Menu Button -->
+      <button class="md:hidden focus:outline-none p-2 rounded-md hover:bg-gray-100" onclick="toggleMenu()" aria-label="Abrir menu">
+        <div class="flex flex-col justify-between w-6 h-5">
+          <span id="bar1" class="bar block h-0.5 bg-gray-700 rounded-full"></span>
+          <span id="bar2" class="bar block h-0.5 bg-gray-700 rounded-full"></span>
+          <span id="bar3" class="bar block h-0.5 bg-gray-700 rounded-full"></span>
+        </div>
+      </button>
+    </div>
+  </header>
+
+  <!-- Backdrop Overlay -->
+  <div id="backdrop" class="fixed inset-0 bg-black bg-opacity-50 hidden z-40 transition-opacity" onclick="toggleMenu()"></div>
+
+  <!-- Mobile Menu -->
+  <div id="mobile-menu" class="md:hidden hidden fixed top-[65px] left-0 right-0 bg-white border-b border-gray-200 px-6 py-6 z-50 slide-down shadow-xl space-y-4 font-medium">
+    <a href="#" class="block py-2 text-gray-700 hover:text-blue-600" onclick="toggleMenu()">Início</a>
+    <a href="#portfolio" class="block py-2 text-gray-700 hover:text-blue-600" onclick="toggleMenu()">Projetos</a>
+    <a href="#testimonials" class="block py-2 text-gray-700 hover:text-blue-600" onclick="toggleMenu()">Diferenciais</a>
+    <a href="#contact" class="block py-2 text-gray-700 hover:text-blue-600" onclick="toggleMenu()">Contato</a>
+    <a href="#portfolio" class="block text-center bg-blue-600 text-white py-2.5 rounded-lg font-semibold hover:bg-blue-700 transition" onclick="toggleMenu()">
+      Conhecer Projetos
+    </a>
+  </div>
+
+  <script>
+    let menuOpen = false;
+
+    function toggleMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const backdrop = document.getElementById('backdrop');
+      const bar1 = document.getElementById('bar1');
+      const bar2 = document.getElementById('bar2');
+      const bar3 = document.getElementById('bar3');
+
+      menuOpen = !menuOpen;
+
+      if (menuOpen) {
+        menu.classList.remove('hidden');
+        backdrop.classList.remove('hidden');
+        bar1.classList.add('open');
+        bar2.classList.add('open');
+        bar3.classList.add('open');
+      } else {
+        menu.classList.add('hidden');
+        backdrop.classList.add('hidden');
+        bar1.classList.remove('open');
+        bar2.classList.remove('open');
+        bar3.classList.remove('open');
+      }
+    }
+  </script>
+
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-r from-blue-600 via-blue-700 to-teal-500 text-white min-h-[85vh] flex flex-col justify-center items-center text-center px-4 py-20 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto z-10">
+      <div class="inline-block bg-white/15 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs md:text-sm font-semibold tracking-wide uppercase mb-6 fade-in-up">
+        Inovação · Ciência · Soluções Digitais
+      </div>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-black mb-6 tracking-tight leading-tight fade-in-up" style="animation-delay: 0.15s;">
+        Transformando Tecnologia e Conhecimento em Soluções Reais
+      </h1>
+      <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 text-blue-50 opacity-95 leading-relaxed fade-in-up" style="animation-delay: 0.3s;">
+        Do suporte técnico de alta precisão à pesquisa de vanguarda em inteligência artificial e energia limpa. Fazemos acontecer com foco, método e excelência.
+      </p>
+      <div class="flex flex-col sm:flex-row justify-center gap-4 fade-in-up" style="animation-delay: 0.45s;">
+        <a href="#portfolio" class="bg-white text-blue-600 font-bold px-8 py-3.5 rounded-lg shadow-lg hover:bg-gray-100 hover:shadow-xl transition transform hover:-translate-y-0.5">
+          Conhecer Nossos Projetos
+        </a>
+        <a href="#contact" class="bg-blue-800/40 border border-white/30 text-white font-semibold px-8 py-3.5 rounded-lg hover:bg-white/10 transition">
+          Fale Conosco
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Section -->
+  <section id="portfolio" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-4">Nossas Frentes de Atuação</h2>
+      <p class="text-lg text-gray-600">Serviços especializados, iniciativas científicas e desenvolvimento tecnológico com compromisso de entrega.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      
+      <!-- Card 1: Assistência Técnica AENTEC -->
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition flex flex-col justify-between border border-gray-100">
+        <div>
+          <div class="relative overflow-hidden rounded-lg mb-4 bg-gray-100 aspect-video flex items-center justify-center">
+            <img src="./static/og-brand.png" alt="AENTEC Assistência Técnica de Celulares" class="w-full h-full object-cover">
+          </div>
+          <span class="inline-block bg-blue-50 text-blue-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">Serviço Especializado</span>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">AENTEC</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-4">
+            Assistência técnica especializada em smartphones e tablets. Troca ágil de telas, substituição de baterias de alta duração, reparos em conectores e placas com diagnóstico ágil e garantia de qualidade.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-gray-100">
+          <a href="./aentec/" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold group text-sm">
+            <span>Acessar AENTEC</span>
+            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 2: AENTECH.ORG - Ciência Cidadã -->
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition flex flex-col justify-between border border-gray-100">
+        <div>
+          <div class="relative overflow-hidden rounded-lg mb-4 bg-gray-100 aspect-video flex items-center justify-center">
+            <img src="./static/chemistry.jpeg" alt="AENTECH.ORG - Inteligência Artificial e Energia Limpa" class="w-full h-full object-cover">
+          </div>
+          <span class="inline-block bg-teal-50 text-teal-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">Ciência Cidadã · Em Construção</span>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">AENTECH.ORG</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-4">
+            Plataforma colaborativa de ciência cidadã voltada à popularização e ao avanço da pesquisa em inteligência artificial aplicada ao design de dispositivos inovadores para armazenamento de energia limpa e renovável.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-gray-100">
+          <a href="https://aentech.org" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-teal-600 hover:text-teal-800 font-semibold group text-sm">
+            <span>Acessar aentech.org</span>
+            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Card 3: Página do Desenvolvedor -->
+      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-xl transition flex flex-col justify-between border border-gray-100">
+        <div>
+          <div class="relative overflow-hidden rounded-lg mb-4 bg-gray-100 aspect-video flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop" alt="Página do Desenvolvedor AJPN" class="w-full h-full object-cover">
+          </div>
+          <span class="inline-block bg-indigo-50 text-indigo-700 text-xs font-semibold px-2.5 py-1 rounded-md mb-2">Engenharia de Software</span>
+          <h3 class="text-xl font-bold text-gray-900 mb-2">Desenvolvedor AJPN</h3>
+          <p class="text-sm text-gray-600 leading-relaxed mb-4">
+            Portfólio técnico e aplicações autorais de AJPN. Soluções robustas em Python, desenvolvimento backend, arquiteturas web escaláveis, microsserviços e automação com foco em estabilidade e alta performance.
+          </p>
+        </div>
+        <div class="pt-4 border-t border-gray-100">
+          <a href="https://ajpn.pythonanywhere.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-semibold group text-sm">
+            <span>Visitar Portfólio</span>
+            <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Testimonials / Diferenciais Section -->
+  <section id="testimonials" class="bg-white py-20 border-y border-gray-100">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight mb-4">Compromisso com Precisão e Inovação</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto mb-12">Nossa atuação é guiada pela excelência técnica, clareza e dedicação em cada desafio assumido.</p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+        <div class="bg-gray-50 p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+          <p class="italic text-gray-700 leading-relaxed">
+            "A agilidade no diagnóstico e o rigor com componentes de primeira linha fizeram toda a diferença no suporte prestado. Confiabilidade rara no mercado."
+          </p>
+          <div class="mt-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-sm">AT</div>
+            <div>
+              <h4 class="font-bold text-gray-900 text-sm">Excelência Técnica</h4>
+              <p class="text-xs text-gray-500">Manutenção & Hardware</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 p-8 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition">
+          <p class="italic text-gray-700 leading-relaxed">
+            "A união entre visão científica, boas práticas de engenharia de software e foco em resultados viabiliza projetos consistentes e inovadores."
+          </p>
+          <div class="mt-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-sm">ES</div>
+            <div>
+              <h4 class="font-bold text-gray-900 text-sm">Pesquisa & Engenharia</h4>
+              <p class="text-xs text-gray-500">Software & Sustentabilidade</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-10 md:p-12">
+      <h2 id="contact-title" class="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-3 tracking-tight">Envie uma Mensagem</h2>
+      <p class="text-center text-gray-600 mb-8 max-w-xl mx-auto text-sm leading-relaxed">
+        Dúvidas, colaborações científicas, projetos em IA ou suporte técnico? Preencha o formulário abaixo e responderemos o mais breve possível.
+      </p>
+
+      <div id="form-status" class="alert d-none mb-6"></div>
+
+      <form id="contact-form" action="https://formspree.io/f/xjvjewbk" method="POST" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">Nome Completo *</label>
+            <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm shadow-sm" id="name" name="name" placeholder="Seu nome" required />
+          </div>
+          <div>
+            <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">E-mail *</label>
+            <input type="email" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm shadow-sm" id="email" name="email" placeholder="seu@email.com" required />
+          </div>
+        </div>
+
+        <div>
+          <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">Assunto *</label>
+          <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm shadow-sm" id="subject" name="subject" placeholder="Assunto da sua mensagem" required />
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Mensagem *</label>
+          <textarea class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm shadow-sm" id="message" name="message" rows="6" placeholder="Escreva sua mensagem com detalhes..." required></textarea>
+        </div>
+
+        <div>
+          <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">Categoria</label>
+          <select class="w-full border border-gray-300 rounded-lg px-4 py-3 text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition text-sm shadow-sm" id="category" name="category">
+            <option value="">Selecione uma categoria</option>
+            <option value="general">Consulta Geral</option>
+            <option value="research">Colaboração Científica</option>
+            <option value="data">Projetos de Ciência de Dados &amp; IA</option>
+            <option value="technical">Suporte Técnico</option>
+            <option value="collaboration">Parcerias e Colaborações</option>
+            <option value="feedback">Feedback e Sugestões</option>
+            <option value="other">Outro</option>
+          </select>
+        </div>
+
+        <div class="text-center pt-3">
+          <button type="submit" id="submit-btn" class="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-10 py-3.5 rounded-lg shadow-md hover:shadow-lg transition duration-200 text-base disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg class="spinner-border animate-spin h-5 w-5 text-white d-none" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <span class="btn-text">Enviar Mensagem</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <div class="mt-8 text-center text-sm text-gray-500">
+      <span>Contato direto:</span>
+      <a href="mailto:contato@fazhoje.com" class="text-blue-600 hover:underline mx-2">contato@fazhoje.com</a>
+      <span>•</span>
+      <a href="https://wa.me/5541984512660?text=Olá!%20Vim%20pelo%20site%20FazHoje." target="_blank" rel="noopener noreferrer" class="text-green-600 hover:underline mx-2 font-medium">WhatsApp: (41) 98451-2660</a>
+    </div>
+  </section>
+
+  <script>
+    const form = document.getElementById("contact-form");
+    const status = document.getElementById("form-status");
+    const submitBtn = document.getElementById("submit-btn");
+    const btnText = submitBtn.querySelector(".btn-text");
+    const spinner = submitBtn.querySelector(".spinner-border");
+
+    async function handleSubmit(event) {
+        event.preventDefault();
+        
+        // UI Feedback
+        submitBtn.disabled = true;
+        spinner.classList.remove("d-none");
+        btnText.innerText = "Enviando...";
+
+        const data = new FormData(event.target);
+        
+        fetch(event.target.action, {
+            method: form.method,
+            body: data,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).then(response => {
+            if (response.ok) {
+                status.innerHTML = "Obrigado! Sua mensagem foi enviada com sucesso.";
+                status.classList.remove("d-none", "alert-danger");
+                status.classList.add("alert-success");
+                form.reset(); // LIMPA O FORMULÁRIO
+                form.classList.add("d-none"); // OPCIONAL: Esconde o formulário
+                const contactTitle = document.getElementById("contact-title") || document.querySelector("h2");
+                if (contactTitle) {
+                    contactTitle.innerText = "Mensagem Enviada!";
+                }
+                if (typeof gtag === 'function') {
+                    gtag('event', 'contact_submit', {
+                        event_category: 'Contato',
+                        event_label: 'Formspree Contact Form',
+                        method: 'Formspree'
+                    });
+                }
+            } else {
+                response.json().then(data => {
+                    if (data && Object.hasOwn(data, 'errors')) {
+                        status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                    } else {
+                        status.innerHTML = "Ops! Ocorreu um erro ao enviar sua mensagem.";
+                    }
+                    status.classList.remove("d-none", "alert-success");
+                    status.classList.add("alert-danger");
+                }).catch(() => {
+                    status.innerHTML = "Ops! Ocorreu um erro ao enviar sua mensagem.";
+                    status.classList.remove("d-none", "alert-success");
+                    status.classList.add("alert-danger");
+                });
+            }
+        }).catch(error => {
+            status.innerHTML = "Ops! Ocorreu um erro ao enviar sua mensagem.";
+            status.classList.remove("d-none", "alert-success");
+            status.classList.add("alert-danger");
+        }).finally(() => {
+            submitBtn.disabled = false;
+            spinner.classList.add("d-none");
+            btnText.innerText = "Enviar Mensagem";
+        });
+    }
+    
+    form.addEventListener("submit", handleSubmit);
+
+    // Compatibilidade: quando testado localmente via file://, direciona para o arquivo index.html da pasta
+    if (window.location.protocol === 'file:') {
+      document.querySelectorAll('a[href="./aentec/"], a[href="./aentec"]').forEach(link => {
+        link.href = './aentec/index.html';
+      });
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 py-10 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+      <div class="text-center md:text-left">
+        <span class="text-xl font-extrabold text-blue-600 tracking-tight">FazHoje</span>
+        <p class="text-xs text-gray-500 mt-1">Soluções tecnológicas, ciência cidadã e engenharia aplicada.</p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-600 font-medium">
+        <a href="./aentec/" class="hover:text-blue-600 transition">AENTEC</a>
+        <a href="https://aentech.org" target="_blank" rel="noopener noreferrer" class="hover:text-teal-600 transition">AENTECH.ORG</a>
+        <a href="https://ajpn.pythonanywhere.com" target="_blank" rel="noopener noreferrer" class="hover:text-indigo-600 transition">Portfólio AJPN</a>
+        <a href="#contact" class="hover:text-blue-600 transition">Contato</a>
+      </div>
+      <div class="text-xs text-gray-400 text-center md:text-right">
+        &copy; 2026 FazHoje. Todos os direitos reservados.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
