@@ -49,11 +49,29 @@ app = Flask(
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "aentech-chave-secreta-2026")
 
 # Configuração do banco de dados (SQLite por padrão; suporta PostgreSQL via DATABASE_URL)
-db_uri = os.environ.get("DATABASE_URL")
+db_uri = (os.environ.get("DATABASE_URL") or "").strip()
+
 if not db_uri:
     db_uri = "sqlite:///" + os.path.join(BASE_DIR, "aentech.db")
 elif db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+elif db_uri.startswith("sqlite:///"):
+    # Normaliza caminhos SQLite para evitar 'unable to open database file' entre ambientes locais e produção
+    sqlite_path = db_uri.replace("sqlite:///", "", 1)
+    # Se for caminho relativo (ex: sqlite:///aentech.db), resolve baseado no diretório da aplicação
+    if not sqlite_path.startswith("/"):
+        sqlite_path = os.path.join(BASE_DIR, sqlite_path)
+
+    # Valida se o diretório pai existe; caso não exista (ex: copiou .env local para PythonAnywhere), faz fallback seguro
+    target_dir = os.path.dirname(sqlite_path)
+    if not os.path.exists(target_dir):
+        try:
+            os.makedirs(target_dir, exist_ok=True)
+        except Exception:
+            # Fallback seguro para o BASE_DIR da aplicação
+            sqlite_path = os.path.join(BASE_DIR, "aentech.db")
+
+    db_uri = "sqlite:///" + sqlite_path
 
 app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
