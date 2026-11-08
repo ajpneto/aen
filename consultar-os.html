@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultar Ordem de Serviço — AENTECH</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://aen.pythonanywhere.com/static/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-accent {
+            color: #d9534f;
+        }
+
+        .hero-banner {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 40px 0 60px;
+            text-align: center;
+            border-bottom: 4px solid #d9534f;
+        }
+
+        .search-card {
+            margin-top: -35px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        /* Timeline de Status */
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            height: 4px;
+            background-color: #e2e8f0;
+            z-index: 1;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .timeline-step-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #e2e8f0;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+
+        .timeline-step.active .timeline-step-icon {
+            background-color: #2563eb;
+            color: #fff;
+        }
+
+        .timeline-step.completed .timeline-step-icon {
+            background-color: #16a34a;
+            color: #fff;
+        }
+
+        .timeline-step-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+        }
+
+        .timeline-step.active .timeline-step-title {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .timeline-step.completed .timeline-step-title {
+            color: #16a34a;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            padding: 24px;
+        }
+
+        .status-badge-lg {
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        footer {
+            margin-top: auto;
+            background-color: #0f172a;
+            color: #94a3b8;
+            padding: 24px 0;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="https://fazhoje.com/aentech/">
+                <i class="fas fa-screwdriver-wrench brand-accent me-2"></i>
+                <span>AEN<span class="brand-accent">TECH</span></span>
+            </a>
+            <div class="ms-auto d-flex align-items-center gap-2">
+                <a href="https://wa.me/5541984512660" target="_blank" class="btn btn-outline-success btn-sm text-white border-success">
+                    <i class="fab fa-whatsapp me-1 text-success"></i> (41) 98451-2660
+                </a>
+                <a href="admin.html" class="btn btn-outline-secondary btn-sm text-light">
+                    Área Técnica
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO HEADER -->
+    <div class="hero-banner">
+        <div class="container">
+            <h2 class="fw-bold mb-2">Acompanhe sua Ordem de Serviço</h2>
+            <p class="text-light-50 mb-0">Consulte o status do reparo do seu celular em tempo real com transparência e garantia.</p>
+        </div>
+    </div>
+
+    <!-- CONTAINER DA CONSULTA -->
+    <div class="container mb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- CARD DE BUSCA -->
+                <div class="search-card">
+                    <form id="formConsulta" onsubmit="return false;">
+                        <label for="inputNumeroOS" class="form-label fw-bold small text-muted text-uppercase">Número da OS ou Telefone do Cliente:</label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-light"><i class="fas fa-receipt text-muted"></i></span>
+                            <input type="text" class="form-control form-control-lg" id="inputNumeroOS" placeholder="Ex: OS-2026-0001 ou (41) 98451-2660" required>
+                            <button type="submit" class="btn btn-danger px-4 fw-bold" id="btnBuscar">
+                                <i class="fas fa-search me-1"></i> Consultar
+                            </button>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <span class="text-muted small">Digite o número impresso no comprovante entregue pela loja.</span>
+                            <a href="https://fazhoje.com/aentech/" class="small text-decoration-none text-danger fw-semibold">
+                                <i class="fas fa-arrow-left me-1"></i> Voltar ao site
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ALERTA DE ERRO OU CARREGAMENTO -->
+                <div id="alertaConsulta" class="alert d-none mt-3" role="alert"></div>
+
+                <!-- CARD COM RESULTADO DA CONSULTA -->
+                <div id="cardResultado" class="info-card mt-4 d-none">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 border-bottom pb-3 mb-3">
+                        <div>
+                            <span class="text-muted small text-uppercase fw-semibold">ORDEM DE SERVIÇO</span>
+                            <h3 class="fw-bold mb-0 text-danger" id="resNumeroOS">OS-XXXX</h3>
+                            <div class="small text-muted mt-1" id="resDataEntrada">Entrada: --/--/----</div>
+                        </div>
+                        <div class="text-end">
+                            <span class="status-badge-lg bg-success text-white" id="resStatusBadge">Em Diagnóstico</span>
+                        </div>
+                    </div>
+
+                    <!-- LINHA DO TEMPO VISUAL DO STATUS -->
+                    <div class="timeline-steps my-4" id="timelineContainer">
+                        <div class="timeline-step" id="step1">
+                            <div class="timeline-step-icon"><i class="fas fa-clipboard-check"></i></div>
+                            <div class="timeline-step-title">Recebido</div>
+                        </div>
+                        <div class="timeline-step" id="step2">
+                            <div class="timeline-step-icon"><i class="fas fa-magnifying-glass"></i></div>
+                            <div class="timeline-step-title">Diagnóstico</div>
+                        </div>
+                        <div class="timeline-step" id="step3">
+                            <div class="timeline-step-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                            <div class="timeline-step-title">Orçamento Aprovado</div>
+                        </div>
+                        <div class="timeline-step" id="step4">
+                            <div class="timeline-step-icon"><i class="fas fa-screwdriver-wrench"></i></div>
+                            <div class="timeline-step-title">Em Reparo</div>
+                        </div>
+                        <div class="timeline-step" id="step5">
+                            <div class="timeline-step-icon"><i class="fas fa-circle-check"></i></div>
+                            <div class="timeline-step-title">Pronto / Entregue</div>
+                        </div>
+                    </div>
+
+                    <!-- DETALHES DO APARELHO E REPARO -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border h-100">
+                                <h6 class="fw-bold mb-2 text-dark"><i class="fas fa-mobile-screen me-2 text-danger"></i>Dados do Aparelho</h6>
+                                <p class="mb-1 small"><strong>Modelo:</strong> <span id="resModelo">-</span></p>
+                                <p class="mb-1 small"><strong>Cor:</strong> <span id="resCor">-</span></p>
+                                <p class="mb-1 small"><strong>IMEI 1:</strong> <span id="resIMEI">-</span></p>
+                                <p class="mb-0 small"><strong>Cliente:</strong> <span id="resCliente">-</span></p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded border h-100">
+                                <h6 class="fw-bold mb-2 text-dark"><i class="fas fa-shield-halved me-2 text-success"></i>Serviço & Garantia</h6>
+                                <p class="mb-1 small"><strong>Técnico:</strong> <span id="resTecnico">-</span></p>
+                                <p class="mb-1 small"><strong>Garantia:</strong> 90 dias por escrito</p>
+                                <p class="mb-1 small"><strong>Problemas:</strong> <span id="resProblemas">-</span></p>
+                                <p class="mb-0 small"><strong>Valor:</strong> <span class="fw-bold text-success" id="resValor">R$ 0,00</span></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- LAUDO TÉCNICO SE DISPONÍVEL -->
+                    <div id="blocoLaudo" class="p-3 bg-white border border-success-subtle rounded mb-4 d-none">
+                        <h6 class="fw-bold text-success mb-1"><i class="fas fa-comment-dots me-2"></i>Observações do Técnico:</h6>
+                        <p class="small text-muted mb-0" id="resLaudo"></p>
+                    </div>
+
+                    <!-- AÇÕES E CONTATO DIRETO -->
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 pt-2 border-top">
+                        <a id="btnWhatsDuvida" href="https://wa.me/5541984512660" target="_blank" class="btn btn-success fw-bold">
+                            <i class="fab fa-whatsapp me-2"></i> Tirar Dúvidas no WhatsApp
+                        </a>
+                        <a id="btnImprimirComprovante" href="#" target="_blank" class="btn btn-outline-secondary">
+                            <i class="fas fa-print me-1"></i> Imprimir Comprovante
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container text-center">
+            <p class="mb-1 fw-bold text-white">AENTECH — Assistência Técnica Especializada</p>
+            <p class="mb-1">Rua João Rafael, Nº 383 — Jardim Industrial, Ourinhos - SP</p>
+            <p class="mb-0 text-white-50 small">Atendimento de Segunda a Sábado das 09h às 19h | WhatsApp: (41) 98451-2660</p>
+        </div>
+    </footer>
+
+    <script>
+        // Determina URL da API
+        function getApiUrl() {
+            const saved = localStorage.getItem('AENTECH_API_URL');
+            if (saved) return saved.replace(/\/+$/, '');
+            const host = window.location.hostname;
+            if (!host || host === 'localhost' || host === '127.0.0.1') {
+                return window.location.port === '5000' ? '' : 'http://localhost:5000';
+            }
+            return 'https://aen.pythonanywhere.com';
+        }
+        const API_URL = getApiUrl();
+
+        const form = document.getElementById('formConsulta');
+        const inputNumero = document.getElementById('inputNumeroOS');
+        const btnBuscar = document.getElementById('btnBuscar');
+        const alerta = document.getElementById('alertaConsulta');
+        const cardResultado = document.getElementById('cardResultado');
+
+        function mostrarAlerta(msg, tipo = 'info') {
+            alerta.textContent = msg;
+            alerta.className = `alert alert-${tipo} mt-3`;
+            alerta.classList.remove('d-none');
+        }
+
+        function ocultarAlerta() {
+            alerta.classList.add('d-none');
+        }
+
+        // Atualiza a barra de linha do tempo
+        function atualizarTimeline(status) {
+            const s = (status || '').toLowerCase();
+            const steps = [
+                document.getElementById('step1'),
+                document.getElementById('step2'),
+                document.getElementById('step3'),
+                document.getElementById('step4'),
+                document.getElementById('step5')
+            ];
+
+            steps.forEach(st => st.className = 'timeline-step');
+
+            if (s.includes('pendente') || s.includes('recebido')) {
+                steps[0].classList.add('active');
+            } else if (s.includes('diagnóstico')) {
+                steps[0].classList.add('completed');
+                steps[1].classList.add('active');
+            } else if (s.includes('aguardando') || s.includes('aprovado')) {
+                steps[0].classList.add('completed');
+                steps[1].classList.add('completed');
+                steps[2].classList.add('active');
+            } else if (s.includes('reparo')) {
+                steps[0].classList.add('completed');
+                steps[1].classList.add('completed');
+                steps[2].classList.add('completed');
+                steps[3].classList.add('active');
+            } else if (s.includes('concluído') || s.includes('entregue')) {
+                steps[0].classList.add('completed');
+                steps[1].classList.add('completed');
+                steps[2].classList.add('completed');
+                steps[3].classList.add('completed');
+                steps[5 - 1].classList.add('completed');
+            } else {
+                steps[0].classList.add('active');
+            }
+        }
+
+        // Executa busca da OS (endpoint público de consulta)
+        async function buscarOrdem(termo) {
+            if (!termo) return;
+            ocultarAlerta();
+            cardResultado.classList.add('d-none');
+
+            btnBuscar.disabled = true;
+            btnBuscar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando...';
+
+            try {
+                const resp = await fetch(`${API_URL}/api/consulta?termo=${encodeURIComponent(termo.trim())}`);
+                const json = await resp.json().catch(() => ({}));
+                if (!resp.ok || !json.ok || !json.ordem) {
+                    mostrarAlerta(json.erro || `Nenhuma Ordem de Serviço encontrada para "${termo}". Por favor, confira o número ou telefone digitado.`, 'warning');
+                    return;
+                }
+                const os = json.ordem;
+
+                // Preenche dados no card
+                document.getElementById('resNumeroOS').textContent = os.os_numero;
+                document.getElementById('resDataEntrada').textContent = `Data de Entrada: ${os.data || '-'}`;
+                document.getElementById('resStatusBadge').textContent = os.status || 'Pendente';
+                document.getElementById('resModelo').textContent = `${os.marca || ''} ${os.modelo || 'Não informado'}`.trim();
+                document.getElementById('resCor').textContent = os.cor || 'Não informada';
+                document.getElementById('resIMEI').textContent = os.imei1 || 'Não informado';
+                document.getElementById('resCliente').textContent = os.cliente_nome;
+                document.getElementById('resTecnico').textContent = os.tecnico || 'Corpo Técnico AENTECH';
+                document.getElementById('resValor').textContent = os.valor ? `R$ ${os.valor}` : 'A definir no diagnóstico';
+
+                const problemasStr = (os.problemas && os.problemas.length) ? os.problemas.join(', ') : 'Revisão geral';
+                document.getElementById('resProblemas').textContent = problemasStr + (os.problemas_adicionais ? ` (${os.problemas_adicionais})` : '');
+
+                if (os.laudo_tecnico) {
+                    document.getElementById('resLaudo').textContent = os.laudo_tecnico;
+                    document.getElementById('blocoLaudo').classList.remove('d-none');
+                } else {
+                    document.getElementById('blocoLaudo').classList.add('d-none');
+                }
+
+                // Atualiza links
+                const msgWhats = encodeURIComponent(`Olá AENTECH! Gostaria de falar sobre minha Ordem de Serviço #${os.os_numero} (${os.marca || ''} ${os.modelo || ''}).`);
+                document.getElementById('btnWhatsDuvida').href = `https://wa.me/5541984512660?text=${msgWhats}`;
+                document.getElementById('btnImprimirComprovante').href = `ordem-de-servico.html?id=${os.id}&print=1`;
+
+                atualizarTimeline(os.status);
+                cardResultado.classList.remove('d-none');
+            } catch (err) {
+                console.error(err);
+                mostrarAlerta(`Erro ao conectar com o servidor: ${err.message}`, 'danger');
+            } finally {
+                btnBuscar.disabled = false;
+                btnBuscar.innerHTML = '<i class="fas fa-search me-1"></i> Consultar';
+            }
+        }
+
+        form.addEventListener('submit', () => {
+            const val = inputNumero.value.trim();
+            if (val) buscarOrdem(val);
+        });
+
+        // Se veio parâmetro na URL (?os=OS-XXXX ou ?termo=...)
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const num = params.get('os') || params.get('busca') || params.get('termo');
+            if (num) {
+                inputNumero.value = num;
+                buscarOrdem(num);
+            }
+        });
+    </script>
+</body>
+</html>

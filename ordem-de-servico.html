@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordem de Serviço — AENTECH</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://aen.pythonanywhere.com/static/favicon.ico" type="image/x-icon">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Barra de Ações (Oculta na Impressão) */
+        .action-bar {
+            width: 100%;
+            max-width: 850px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .action-bar .btn-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+        .btn-primary:hover { background-color: #0369a1; }
+
+        .btn-success {
+            background-color: #16a34a;
+            color: #ffffff;
+        }
+        .btn-success:hover { background-color: #15803d; }
+
+        .btn-dark {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .btn-dark:hover { background-color: #0f172a; }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: #94a3b8;
+            color: #334155;
+        }
+        .btn-outline:hover { background-color: #f1f5f9; }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .status-pendente { background: #fef3c7; color: #b45309; }
+        .status-diagnostico { background: #e0f2fe; color: #0369a1; }
+        .status-aguardando { background: #ffedd5; color: #c2410c; }
+        .status-aprovado { background: #dcfce7; color: #15803d; }
+        .status-reparo { background: #f3e8ff; color: #7e22ce; }
+        .status-concluido { background: #ccfbf1; color: #0f766e; }
+        .status-entregue { background: #e2e8f0; color: #334155; }
+        .status-cancelado { background: #fee2e2; color: #b91c1c; }
+
+        .toast-msg {
+            display: none;
+            width: 100%;
+            max-width: 850px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 12px;
+        }
+        .toast-success { background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .toast-error { background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        /* Container Principal da OS */
+        .os-container {
+            width: 100%;
+            max-width: 850px;
+            background: #fff;
+            border: 2px solid #000;
+            padding: 15px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        /* Cabeçalho */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .logo-area {
+            width: 25%;
+            text-align: center;
+            font-weight: bold;
+            color: #d9534f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .logo-area img {
+            width: 60px;
+            height: auto;
+            margin-bottom: 2px;
+        }
+
+        .title-area {
+            width: 50%;
+            text-align: center;
+        }
+
+        .title-area h1 {
+            font-size: 20px;
+            margin: 0;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-area {
+            width: 25%;
+            text-align: right;
+            font-size: 11px;
+            line-height: 1.3;
+        }
+
+        .contact-area .address {
+            color: #d9534f;
+            font-weight: bold;
+        }
+
+        .contact-area .phone {
+            color: #2e7d32;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+
+        /* Seções e Tabelas */
+        .section-header {
+            background-color: #e0e0e0;
+            font-weight: bold;
+            padding: 4px 6px;
+            border: 1px solid #000;
+            text-transform: uppercase;
+        }
+
+        .form-row {
+            display: flex;
+            border-left: 1px solid #000;
+            border-right: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            padding: 4px 6px;
+            border-right: 1px solid #000;
+            flex-grow: 1;
+        }
+
+        .form-group:last-child {
+            border-right: none;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-right: 5px;
+            white-space: nowrap;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="tel"],
+        .form-group input[type="email"],
+        .form-group select {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid #ccc;
+            outline: none;
+            padding: 2px 4px;
+            font-size: 12px;
+            background: transparent;
+        }
+
+        .form-group input:focus {
+            border-bottom: 1px solid #000;
+            background-color: #f8fafc;
+        }
+
+        /* Área de Padrão/Senha */
+        .pattern-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 16px);
+            grid-gap: 16px;
+            justify-content: center;
+            align-items: center;
+            padding: 8px 4px;
+            cursor: pointer;
+        }
+
+        .pattern-dot {
+            width: 14px;
+            height: 14px;
+            background-color: #000;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 9px;
+            font-weight: bold;
+            user-select: none;
+        }
+
+        .pattern-dot.active {
+            background-color: #d9534f;
+            transform: scale(1.2);
+            box-shadow: 0 0 5px rgba(217, 83, 79, 0.7);
+        }
+
+        /* Checklist de Problemas */
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px 8px;
+            padding: 6px 8px;
+            border: 1px solid #000;
+            border-top: none;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .problem-item input {
+            margin-right: 5px;
+            cursor: pointer;
+        }
+
+        .problem-item label {
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .additional-problems {
+            border: 1px solid #000;
+            border-top: none;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .additional-problems input {
+            flex-grow: 1;
+            border: none;
+            border-bottom: 1px solid #000;
+            margin-left: 5px;
+            outline: none;
+            font-size: 12px;
+            padding: 2px 4px;
+        }
+
+        /* Rodapé e Termos */
+        .terms {
+            font-size: 9px;
+            text-align: justify;
+            margin-top: 8px;
+            line-height: 1.25;
+            color: #111;
+        }
+
+        .signatures {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 32px;
+            padding: 0 20px;
+        }
+
+        .signature-line {
+            width: 44%;
+            border-top: 1px solid #000;
+            text-align: center;
+            padding-top: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        /* ================= IMPRESSÃO ================= */
+
+        /* Login overlay */
+        .login-overlay {
+            position: fixed; inset: 0; background: rgba(15,23,42,0.75);
+            display: none; align-items: center; justify-content: center;
+            z-index: 3000; padding: 1rem;
+        }
+        .login-overlay.active { display: flex; }
+        .login-card { width:100%; max-width:420px; background:#fff; border-radius:12px; box-shadow:0 20px 50px rgba(0,0,0,.25); overflow:hidden; font-family: Arial, sans-serif; }
+        .login-header { background:#1e293b; color:#fff; padding:1rem 1.25rem; }
+        .login-body { padding:1.25rem; }
+        .login-body label { display:block; font-weight:bold; margin-bottom:4px; font-size:12px; }
+        .login-body input { width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:6px; margin-bottom:10px; font-size:13px; }
+        .login-body .btn-login { width:100%; background:#16a34a; color:#fff; border:none; padding:10px; border-radius:6px; font-weight:bold; cursor:pointer; }
+        .login-body .btn-login:disabled { opacity:.7; cursor:default; }
+        .login-error { display:none; background:#fee2e2; color:#991b1b; border:1px solid #fecaca; padding:8px 10px; border-radius:6px; margin-bottom:10px; font-size:12px; }
+        .app-locked { filter: blur(1px); pointer-events:none; user-select:none; }
+        .auth-badge { font-size:11px; padding:4px 8px; border-radius:999px; border:1px solid #334155; color:#334155; background:#f8fafc; }
+
+        @media print {
+            body {
+                background-color: #fff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .os-container {
+                border: 2px solid #000 !important;
+                box-shadow: none !important;
+                max-width: 100% !important;
+                width: 100% !important;
+                padding: 10px !important;
+                page-break-inside: avoid;
+            }
+
+            .form-group input,
+            .form-group select,
+            .additional-problems input {
+                border-bottom: none !important;
+            }
+
+            .signatures {
+                margin-top: 40px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- BARRA DE AÇÕES (NÃO APARECE NA IMPRESSÃO) -->
+    <div class="action-bar no-print">
+        <div class="btn-group">
+            <a href="admin.html" class="btn btn-dark" title="Acessar o Painel Administrativo">
+                <i class="fas fa-arrow-left"></i> Painel Admin
+            </a>
+            <button type="button" class="btn btn-outline" id="btnNovaOS" title="Limpar formulário e iniciar nova OS">
+                <i class="fas fa-file-circle-plus"></i> Nova OS
+            </button>
+            <a href="consultar-os.html" class="btn btn-outline" target="_blank" title="Página pública de consulta">
+                <i class="fas fa-search"></i> Consultar OS
+            </a>
+            <span id="authBadge" class="auth-badge" style="display:none;"></span>
+            <button type="button" class="btn btn-outline" id="btnLogout" style="display:none;" title="Sair"><i class="fas fa-right-from-bracket"></i></button>
+            <button type="button" class="btn btn-outline" id="btnLoginOpen" title="Entrar"><i class="fas fa-lock"></i> Entrar</button>
+        </div>
+
+        <div class="btn-group">
+            <div style="display: flex; align-items: center; gap: 6px;">
+                <label for="statusSelect" style="font-weight: bold;">Status:</label>
+                <select id="statusSelect" style="padding: 5px 8px; border-radius: 4px; border: 1px solid #cbd5e1; font-weight: bold;">
+                    <option value="Pendente">Pendente</option>
+                    <option value="Em Diagnóstico">Em Diagnóstico</option>
+                    <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+                    <option value="Orçamento Aprovado">Orçamento Aprovado</option>
+                    <option value="Em Reparo">Em Reparo</option>
+                    <option value="Concluído">Concluído</option>
+                    <option value="Entregue">Entregue</option>
+                    <option value="Cancelado">Cancelado</option>
+                </select>
+                <span id="badgeStatusHeader" class="status-badge status-pendente">Pendente</span>
+            </div>
+
+            <button type="button" class="btn btn-success" id="btnSalvar">
+                <i class="fas fa-save"></i> Salvar OS
+            </button>
+            <button type="button" class="btn btn-primary" onclick="window.print()">
+                <i class="fas fa-print"></i> Imprimir OS
+            </button>
+        </div>
+    </div>
+
+    <!-- MENSAGEM TOAST FEEDBACK -->
+    <div id="toast" class="toast-msg no-print"></div>
+
+
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" class="login-overlay no-print" aria-hidden="true">
+        <div class="login-card">
+            <div class="login-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <h3 style="margin:0 0 4px; font-size:16px;"><i class="fas fa-lock" style="color:#f87171;"></i> Acesso Restrito</h3>
+                    <div style="font-size:12px; color:#cbd5e1;">Entre para criar ou editar Ordens de Serviço.</div>
+                </div>
+                <button type="button" id="btnFecharLogin" style="background:none; border:none; color:#cbd5e1; font-size:22px; line-height:1; cursor:pointer;" title="Fechar">&times;</button>
+            </div>
+            <div class="login-body">
+                <form id="loginForm">
+                    <label for="loginUsername">Usuário</label>
+                    <input type="text" id="loginUsername" autocomplete="username" required>
+                    <label for="loginSenha">Senha</label>
+                    <input type="password" id="loginSenha" autocomplete="current-password" required>
+                    <div id="loginErro" class="login-error"></div>
+                    <button type="submit" class="btn-login" id="btnLogin"><i class="fas fa-right-to-bracket"></i> Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="appShell">
+
+    <!-- FORMULÁRIO OFICIAL DA ORDEM DE SERVIÇO -->
+    <form class="os-container" id="formOS" onsubmit="return false;">
+        <input type="hidden" id="osId" name="id" value="">
+
+        <!-- Cabeçalho -->
+        <div class="header">
+            <div class="logo-area">
+                <img src="https://aen.pythonanywhere.com/static/favicon.ico" alt="Logo AENTECH" onerror="this.style.display='none'">
+                <span style="font-size: 18px; font-weight: bold; color: #d9534f;">AENTECH</span>
+            </div>
+            <div class="title-area">
+                <h1>Ordem de Serviço</h1>
+            </div>
+            <div class="contact-area">
+                <div class="address">
+                    Rua João Rafael, Nº 383<br>
+                    Jardim Industrial, Ourinhos - SP
+                </div>
+                <div class="phone">
+                    (41) 98451-2660 🟢
+                </div>
+            </div>
+        </div>
+
+        <!-- Técnico Responsável, OS Nº e Data -->
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <label>TÉCNICO RESPONSÁVEL:</label>
+                <input type="text" id="tecnico" name="tecnico" placeholder="Nome do técnico">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label style="color: red;">OS Nº</label>
+                <input type="text" id="os_numero" name="os_numero" placeholder="Gerado automaticamente" style="font-weight: bold; color: red;">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>DATA:</label>
+                <input type="text" id="data" name="data" placeholder="DD/MM/AAAA">
+            </div>
+        </div>
+
+        <!-- Dados do Cliente -->
+        <div class="section-header">Dados do Cliente:</div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <label>NOME:</label>
+                <input type="text" id="cliente_nome" name="cliente_nome" required placeholder="Nome completo do cliente">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>TELEFONE:</label>
+                <input type="tel" id="cliente_telefone" name="cliente_telefone" required placeholder="(XX) XXXXX-XXXX">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <label>ENDEREÇO:</label>
+                <input type="text" id="cliente_endereco" name="cliente_endereco" placeholder="Rua, número, complemento">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>E-MAIL:</label>
+                <input type="email" id="cliente_email" name="cliente_email" placeholder="cliente@email.com">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+                <label>BAIRRO E CIDADE:</label>
+                <input type="text" id="cliente_bairro_cidade" name="cliente_bairro_cidade" placeholder="Bairro, Cidade - UF">
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>CEP:</label>
+                <input type="text" id="cliente_cep" name="cliente_cep" placeholder="00000-000">
+            </div>
+        </div>
+
+        <!-- Equipamento -->
+        <div class="section-header">Equipamento:</div>
+        <div style="display: flex;">
+            <div style="flex: 3;">
+                <div class="form-row">
+                    <div class="form-group"><label>IMEI 1:</label><input type="text" id="imei1" name="imei1"></div>
+                    <div class="form-group"><label>MODELO:</label><input type="text" id="modelo" name="modelo" placeholder="Ex: iPhone 13, Galaxy S21"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>IMEI 2:</label><input type="text" id="imei2" name="imei2"></div>
+                    <div class="form-group"><label>COR:</label><input type="text" id="cor" name="cor" placeholder="Preto, Azul, Branco..."></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Nº SÉRIE:</label><input type="text" id="numero_serie" name="numero_serie"></div>
+                    <div class="form-group"><label>BATERIA:</label><input type="text" id="bateria" name="bateria" placeholder="% ou estado"></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>MARCA:</label><input type="text" id="marca" name="marca" placeholder="Apple, Samsung, Motorola..."></div>
+                    <div class="form-group"><label>ACESSÓRIOS:</label><input type="text" id="acessorios" name="acessorios" placeholder="Capa, película, chip..."></div>
+                </div>
+            </div>
+
+            <!-- Padrão Desbloqueio e Senha -->
+            <div style="flex: 1; border: 1px solid #000; border-left: none; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px;">
+                <label style="font-weight: bold; margin-bottom: 2px;">SENHA / PADRÃO:</label>
+                <div class="pattern-grid" id="patternGrid" title="Clique nos pontos para desenhar o padrão">
+                    <div class="pattern-dot" data-dot="1"></div>
+                    <div class="pattern-dot" data-dot="2"></div>
+                    <div class="pattern-dot" data-dot="3"></div>
+                    <div class="pattern-dot" data-dot="4"></div>
+                    <div class="pattern-dot" data-dot="5"></div>
+                    <div class="pattern-dot" data-dot="6"></div>
+                    <div class="pattern-dot" data-dot="7"></div>
+                    <div class="pattern-dot" data-dot="8"></div>
+                    <div class="pattern-dot" data-dot="9"></div>
+                </div>
+                <input type="text" id="senha_padrao" name="senha_padrao" placeholder="PIN ou sequência" style="width: 90%; text-align: center; border: none; border-bottom: 1px solid #999; outline: none; font-size: 11px; margin-top: 4px;">
+            </div>
+        </div>
+
+        <!-- Descrição do Problema -->
+        <div class="section-header">Descrição do Problema:</div>
+        <div class="problems-grid" id="problemsContainer">
+            <!-- 31 Itens do Checklist Oficial -->
+            <div class="problem-item"><input type="checkbox" id="p1" value="1. Não liga"><label for="p1">1. Não liga</label></div>
+            <div class="problem-item"><input type="checkbox" id="p9" value="9. Tela piscando"><label for="p9">9. Tela piscando</label></div>
+            <div class="problem-item"><input type="checkbox" id="p17" value="17. Flash não funciona"><label for="p17">17. Flash não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p25" value="25. Não reconhece cartão SD"><label for="p25">25. Não reconhece cartão SD</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p2" value="2. Reinicia"><label for="p2">2. Reinicia</label></div>
+            <div class="problem-item"><input type="checkbox" id="p10" value="10. Carga falsa"><label for="p10">10. Carga falsa</label></div>
+            <div class="problem-item"><input type="checkbox" id="p18" value="18. Wi-Fi não funciona"><label for="p18">18. Wi-Fi não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p26" value="26. Não abre a galeria"><label for="p26">26. Não abre a galeria</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p3" value="3. Travado"><label for="p3">3. Travado</label></div>
+            <div class="problem-item"><input type="checkbox" id="p11" value="11. Não segura carga"><label for="p11">11. Não segura carga</label></div>
+            <div class="problem-item"><input type="checkbox" id="p19" value="19. Bússola não funciona"><label for="p19">19. Bússola não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p27" value="27. Molhou"><label for="p27">27. Molhou</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p4" value="4. Touch não funciona"><label for="p4">4. Touch não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p12" value="12. Sem áudio ou estourado"><label for="p12">12. Sem áudio ou estourado</label></div>
+            <div class="problem-item"><input type="checkbox" id="p20" value="20. Não vibra"><label for="p20">20. Não vibra</label></div>
+            <div class="problem-item"><input type="checkbox" id="p28" value="28. Liga com tela preta"><label for="p28">28. Liga com tela preta</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p5" value="5. Touch fantasma"><label for="p5">5. Touch fantasma</label></div>
+            <div class="problem-item"><input type="checkbox" id="p13" value="13. Entrada de fone não funciona"><label for="p13">13. Entrada de fone não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p21" value="21. Sem sinal SIM"><label for="p21">21. Sem sinal SIM</label></div>
+            <div class="problem-item"><input type="checkbox" id="p29" value="29. Não carrega"><label for="p29">29. Não carrega</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p6" value="6. Display quebrado"><label for="p6">6. Display quebrado</label></div>
+            <div class="problem-item"><input type="checkbox" id="p14" value="14. Não grava voz"><label for="p14">14. Não grava voz</label></div>
+            <div class="problem-item"><input type="checkbox" id="p22" value="22. Não faz ligação"><label for="p22">22. Não faz ligação</label></div>
+            <div class="problem-item"><input type="checkbox" id="p30" value="30. Bluetooth não funciona"><label for="p30">30. Bluetooth não funciona</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p7" value="7. Frontal quebrada"><label for="p7">7. Frontal quebrada</label></div>
+            <div class="problem-item"><input type="checkbox" id="p15" value="15. Câmera frontal não funciona"><label for="p15">15. Câmera frontal não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p23" value="23. Superaquecendo"><label for="p23">23. Superaquecendo</label></div>
+            <div class="problem-item"><input type="checkbox" id="p31" value="31. Digital não funciona"><label for="p31">31. Digital não funciona</label></div>
+
+            <div class="problem-item"><input type="checkbox" id="p8" value="8. Sem brilho na tela"><label for="p8">8. Sem brilho na tela</label></div>
+            <div class="problem-item"><input type="checkbox" id="p16" value="16. Câmera traseira não funciona"><label for="p16">16. Câmera traseira não funciona</label></div>
+            <div class="problem-item"><input type="checkbox" id="p24" value="24. Não reconhece o chip"><label for="p24">24. Não reconhece o chip</label></div>
+            <div class="problem-item"><input type="checkbox" id="p32" value="32. Outro defeito"><label for="p32">32. Outro defeito</label></div>
+        </div>
+
+        <!-- Problemas Adicionais -->
+        <div class="additional-problems">
+            <label><strong>Problemas adicionais / Laudo:</strong></label>
+            <input type="text" id="problemas_adicionais" name="problemas_adicionais" placeholder="Relato adicional do cliente ou observação física do aparelho">
+        </div>
+
+        <!-- Valor -->
+        <div class="form-row" style="margin-top: 5px;">
+            <div class="form-group" style="justify-content: flex-end;">
+                <label>VALOR (R$):</label>
+                <input type="text" id="valor" name="valor" placeholder="0,00" style="width: 200px; font-weight: bold; font-size: 14px; text-align: right;">
+            </div>
+        </div>
+
+        <!-- Termo de Aceite -->
+        <div class="terms">
+            <strong>LEIA COM ATENÇÃO!</strong> Não aceitamos reclamações posteriores, por isso, confira o seu equipamento no ato do recebimento. Só faremos a entrega do aparelho mediante a apresentação deste documento. Retirada por terceiros só com autorização e apresentação dos documentos do titular. O prazo para a retirada do aparelho é de 90 dias. A partir deste prazo, será cobrada uma taxa diária de 5% do valor do reparo.<br>
+            "Declaro ter lido atentamente e estar ciente que o aparelho está nas condições assinaladas acima e concordo com os termos."
+        </div>
+
+        <!-- Assinaturas -->
+        <div class="signatures">
+            <div class="signature-line">Ass. Técnico</div>
+            <div class="signature-line">Ass. Cliente</div>
+        </div>
+    </form>
+    </div><!-- /appShell -->
+
+    <script>
+        // Determina a URL base da API
+        function getApiUrl() {
+            const saved = localStorage.getItem('AENTECH_API_URL');
+            if (saved) return saved.replace(/\/+$/, '');
+            const host = window.location.hostname;
+            if (!host || host === 'localhost' || host === '127.0.0.1') {
+                return window.location.port === '5000' ? '' : 'http://localhost:5000';
+            }
+            return 'https://aen.pythonanywhere.com';
+        }
+        const API_URL = getApiUrl();
+
+        // ===== AUTENTICAÇÃO =====
+        function getAuthToken() { return localStorage.getItem('AENTECH_AUTH_TOKEN') || ''; }
+        function getAuthUser() { return localStorage.getItem('AENTECH_AUTH_USER') || ''; }
+        function setAuthToken(token, username) {
+            if (token) localStorage.setItem('AENTECH_AUTH_TOKEN', token);
+            else localStorage.removeItem('AENTECH_AUTH_TOKEN');
+            if (username) localStorage.setItem('AENTECH_AUTH_USER', username);
+            else localStorage.removeItem('AENTECH_AUTH_USER');
+            updateAuthUI();
+        }
+        function authHeaders(extra = {}) {
+            const h = { ...extra }; const t = getAuthToken();
+            if (t) h['Authorization'] = `Bearer ${t}`;
+            return h;
+        }
+        async function authFetch(url, options = {}) {
+            const opts = { ...options, headers: authHeaders(options.headers || {}) };
+            const res = await fetch(url, opts);
+            if (res.status === 401) { setAuthToken('', ''); showLogin('Sessão expirada ou inválida. Faça login novamente.'); }
+            return res;
+        }
+        function showLogin(msg = '') {
+            document.getElementById('loginOverlay').classList.add('active');
+            document.getElementById('appShell').classList.add('app-locked');
+            const el = document.getElementById('loginErro');
+            if (msg) { el.textContent = msg; el.style.display = 'block'; } else { el.style.display = 'none'; }
+        }
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.remove('active');
+            document.getElementById('appShell').classList.remove('app-locked');
+            document.getElementById('loginErro').style.display = 'none';
+        }
+        function updateAuthUI() {
+            const user = getAuthUser();
+            document.getElementById('authBadge').style.display = user ? 'inline-block' : 'none';
+            document.getElementById('authBadge').textContent = user ? `@${user}` : '';
+            document.getElementById('btnLogout').style.display = user ? 'inline-flex' : 'none';
+            document.getElementById('btnLoginOpen').style.display = user ? 'none' : 'inline-flex';
+        }
+        async function fazerLogin(username, senha) {
+            const res = await fetch(`${API_URL}/api/login`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, senha })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) throw new Error(data.erro || 'Falha no login.');
+            setAuthToken(data.token, data.usuario?.username || username);
+            return data;
+        }
+
+
+        // Elementos DOM
+        const formOS = document.getElementById('formOS');
+        const osId = document.getElementById('osId');
+        const osNumero = document.getElementById('os_numero');
+        const dataInput = document.getElementById('data');
+        const statusSelect = document.getElementById('statusSelect');
+        const badgeStatusHeader = document.getElementById('badgeStatusHeader');
+        const btnSalvar = document.getElementById('btnSalvar');
+        const btnNovaOS = document.getElementById('btnNovaOS');
+        const toast = document.getElementById('toast');
+        const senhaPadraoInput = document.getElementById('senha_padrao');
+        const dots = document.querySelectorAll('.pattern-dot');
+
+        // Mostra notificação toast
+        function showToast(msg, isSuccess = true) {
+            toast.textContent = msg;
+            toast.className = 'toast-msg no-print ' + (isSuccess ? 'toast-success' : 'toast-error');
+            toast.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => { toast.style.display = 'none'; }, 6000);
+        }
+
+        // Atualiza a badge visual de status
+        function atualizarBadgeStatus(status) {
+            badgeStatusHeader.textContent = status;
+            badgeStatusHeader.className = 'status-badge';
+            const s = (status || '').toLowerCase();
+            if (s.includes('pendente')) badgeStatusHeader.classList.add('status-pendente');
+            else if (s.includes('diagnóstico')) badgeStatusHeader.classList.add('status-diagnostico');
+            else if (s.includes('aguardando')) badgeStatusHeader.classList.add('status-aguardando');
+            else if (s.includes('aprovado')) badgeStatusHeader.classList.add('status-aprovado');
+            else if (s.includes('reparo')) badgeStatusHeader.classList.add('status-reparo');
+            else if (s.includes('concluído')) badgeStatusHeader.classList.add('status-concluido');
+            else if (s.includes('entregue')) badgeStatusHeader.classList.add('status-entregue');
+            else if (s.includes('cancelado')) badgeStatusHeader.classList.add('status-cancelado');
+            else badgeStatusHeader.classList.add('status-pendente');
+        }
+
+        statusSelect.addEventListener('change', () => {
+            atualizarBadgeStatus(statusSelect.value);
+        });
+
+        // Interação com o padrão de desbloqueio (9 pontos)
+        let patternSequence = [];
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const num = dot.getAttribute('data-dot');
+                if (dot.classList.contains('active')) {
+                    dot.classList.remove('active');
+                    dot.textContent = '';
+                    patternSequence = patternSequence.filter(n => n !== num);
+                } else {
+                    dot.classList.add('active');
+                    patternSequence.push(num);
+                    dot.textContent = patternSequence.indexOf(num) + 1;
+                }
+                senhaPadraoInput.value = patternSequence.length ? `Padrão: ${patternSequence.join('-')}` : '';
+            });
+        });
+
+        function sincronizarPontosPorTexto(texto) {
+            dots.forEach(d => { d.classList.remove('active'); d.textContent = ''; });
+            patternSequence = [];
+            if (!texto) return;
+            const match = texto.match(/([1-9](?:-[1-9])*)/);
+            if (match) {
+                const nums = match[1].split('-');
+                nums.forEach((n, idx) => {
+                    const dot = document.querySelector(`.pattern-dot[data-dot="${n}"]`);
+                    if (dot) {
+                        dot.classList.add('active');
+                        dot.textContent = idx + 1;
+                        patternSequence.push(n);
+                    }
+                });
+            }
+        }
+
+        // Preenche data atual se vazio
+        function definirDataHoje() {
+            const hoje = new Date();
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const ano = hoje.getFullYear();
+            dataInput.value = `${dia}/${mes}/${ano}`;
+        }
+
+        // Coleta os dados do formulário para envio via API REST
+        function coletarDados() {
+            const checkedProblems = [];
+            document.querySelectorAll('#problemsContainer input[type="checkbox"]:checked').forEach(cb => {
+                checkedProblems.push(cb.value);
+            });
+
+            return {
+                tecnico: document.getElementById('tecnico').value.trim(),
+                os_numero: osNumero.value.trim(),
+                data: dataInput.value.trim(),
+                status: statusSelect.value,
+                valor: document.getElementById('valor').value.trim(),
+                cliente_nome: document.getElementById('cliente_nome').value.trim(),
+                cliente_telefone: document.getElementById('cliente_telefone').value.trim(),
+                cliente_endereco: document.getElementById('cliente_endereco').value.trim(),
+                cliente_email: document.getElementById('cliente_email').value.trim(),
+                cliente_bairro_cidade: document.getElementById('cliente_bairro_cidade').value.trim(),
+                cliente_cep: document.getElementById('cliente_cep').value.trim(),
+                marca: document.getElementById('marca').value.trim(),
+                modelo: document.getElementById('modelo').value.trim(),
+                cor: document.getElementById('cor').value.trim(),
+                imei1: document.getElementById('imei1').value.trim(),
+                imei2: document.getElementById('imei2').value.trim(),
+                numero_serie: document.getElementById('numero_serie').value.trim(),
+                bateria: document.getElementById('bateria').value.trim(),
+                acessorios: document.getElementById('acessorios').value.trim(),
+                senha_padrao: senhaPadraoInput.value.trim(),
+                problemas: checkedProblems,
+                problemas_adicionais: document.getElementById('problemas_adicionais').value.trim(),
+                notificar_email: (statusSelect.value === 'Orçamento Aprovado')
+            };
+        }
+
+        // Preenche formulário com dados da OS carregada
+        function popularFormulario(os) {
+            osId.value = os.id || '';
+            osNumero.value = os.os_numero || '';
+            dataInput.value = os.data || '';
+            statusSelect.value = os.status || 'Pendente';
+            atualizarBadgeStatus(os.status || 'Pendente');
+
+            document.getElementById('tecnico').value = os.tecnico || '';
+            document.getElementById('valor').value = os.valor || '';
+            document.getElementById('cliente_nome').value = os.cliente_nome || '';
+            document.getElementById('cliente_telefone').value = os.cliente_telefone || '';
+            document.getElementById('cliente_endereco').value = os.cliente_endereco || '';
+            document.getElementById('cliente_email').value = os.cliente_email || '';
+            document.getElementById('cliente_bairro_cidade').value = os.cliente_bairro_cidade || '';
+            document.getElementById('cliente_cep').value = os.cliente_cep || '';
+            document.getElementById('marca').value = os.marca || '';
+            document.getElementById('modelo').value = os.modelo || '';
+            document.getElementById('cor').value = os.cor || '';
+            document.getElementById('imei1').value = os.imei1 || '';
+            document.getElementById('imei2').value = os.imei2 || '';
+            document.getElementById('numero_serie').value = os.numero_serie || '';
+            document.getElementById('bateria').value = os.bateria || '';
+            document.getElementById('acessorios').value = os.acessorios || '';
+            senhaPadraoInput.value = os.senha_padrao || '';
+            sincronizarPontosPorTexto(os.senha_padrao || '');
+            document.getElementById('problemas_adicionais').value = os.problemas_adicionais || '';
+
+            // Checkboxes
+            const problemasSalvos = Array.isArray(os.problemas) ? os.problemas : [];
+            document.querySelectorAll('#problemsContainer input[type="checkbox"]').forEach(cb => {
+                cb.checked = problemasSalvos.some(p => p.toLowerCase().trim() === cb.value.toLowerCase().trim());
+            });
+        }
+
+        // Salvar OS (POST para nova / PUT para atualização)
+        async function salvarOrdemServico() {
+            const dados = coletarDados();
+
+            if (!dados.cliente_nome) {
+                showToast('Por favor, informe o Nome do Cliente.', false);
+                document.getElementById('cliente_nome').focus();
+                return;
+            }
+
+            btnSalvar.disabled = true;
+            btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
+
+            try {
+                const idAtual = osId.value;
+                const url = idAtual ? `${API_URL}/api/os/${idAtual}` : `${API_URL}/api/os`;
+                const metodo = idAtual ? 'PUT' : 'POST';
+
+                if (!getAuthToken()) { showLogin('Faça login para salvar a Ordem de Serviço.'); return; }
+                const resp = await authFetch(url, {
+                    method: metodo,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+                if (resp.status === 401) return;
+
+                const json = await resp.json();
+
+                if (!resp.ok || !json.ok) {
+                    throw new Error(json.erro || 'Falha ao processar requisição.');
+                }
+
+                popularFormulario(json.ordem);
+                window.history.replaceState(null, '', `?id=${json.ordem.id}`);
+
+                let msgSucesso = `Ordem de Serviço ${json.ordem.os_numero} salva com sucesso!`;
+                if (json.email_msg) {
+                    msgSucesso += ` (${json.email_msg})`;
+                }
+                showToast(msgSucesso, true);
+            } catch (err) {
+                console.error(err);
+                showToast(`Erro ao salvar OS: ${err.message}`, false);
+            } finally {
+                btnSalvar.disabled = false;
+                btnSalvar.innerHTML = '<i class="fas fa-save"></i> Salvar OS';
+            }
+        }
+
+        btnSalvar.addEventListener('click', salvarOrdemServico);
+
+        btnNovaOS.addEventListener('click', () => {
+            if (confirm('Deseja iniciar uma nova Ordem de Serviço? Os campos não salvos serão limpos.')) {
+                formOS.reset();
+                osId.value = '';
+                osNumero.value = '';
+                senhaPadraoInput.value = '';
+                dots.forEach(d => { d.classList.remove('active'); d.textContent = ''; });
+                patternSequence = [];
+                definirDataHoje();
+                statusSelect.value = 'Pendente';
+                atualizarBadgeStatus('Pendente');
+                window.history.replaceState(null, '', window.location.pathname);
+                showToast('Novo formulário de OS pronto para preenchimento.', true);
+            }
+        });
+
+        // Carrega OS por parâmetro na URL (?id=X ou ?os=OS-XXXX)
+        async function carregarOSPorUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get('id');
+            const num = params.get('os');
+            const autoPrint = params.get('print');
+
+            if (id || num) {
+                try {
+                    let json = null;
+                    // Tenta com autenticação (dados completos para edição)
+                    if (getAuthToken()) {
+                        const urlAuth = id ? `${API_URL}/api/os/${id}` : `${API_URL}/api/os/numero/${encodeURIComponent(num)}`;
+                        const resp = await authFetch(urlAuth);
+                        if (resp.ok) json = await resp.json();
+                    }
+                    // Fallback público (dados limitados para visualização/impressão)
+                    if (!json || !json.ok || !json.ordem) {
+                        const urlPub = id ? `${API_URL}/api/consulta?id=${encodeURIComponent(id)}` : `${API_URL}/api/consulta?termo=${encodeURIComponent(num)}`;
+                        const resp2 = await fetch(urlPub);
+                        json = await resp2.json().catch(() => null);
+                    }
+                    if (json && json.ok && json.ordem) {
+                        popularFormulario(json.ordem);
+                        if (autoPrint === 'true' || autoPrint === '1') {
+                            setTimeout(() => window.print(), 500);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Falha ao carregar OS:', e);
+                }
+            } else {
+                definirDataHoje();
+                atualizarBadgeStatus('Pendente');
+            }
+        }
+
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const err = document.getElementById('loginErro');
+            btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+            err.style.display = 'none';
+            try {
+                await fazerLogin(document.getElementById('loginUsername').value.trim(), document.getElementById('loginSenha').value);
+                document.getElementById('loginSenha').value = '';
+                hideLogin();
+                showToast('Login realizado com sucesso.', true);
+            } catch (ex) {
+                err.textContent = ex.message || 'Erro no login.'; err.style.display = 'block';
+            } finally {
+                btn.disabled = false; btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> Entrar';
+            }
+        });
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            try { await fetch(`${API_URL}/api/logout`, { method: 'POST' }); } catch {}
+            setAuthToken('', ''); showToast('Sessão encerrada.', true);
+        });
+        document.getElementById('btnLoginOpen').addEventListener('click', () => showLogin());
+        document.getElementById('btnFecharLogin')?.addEventListener('click', hideLogin);
+        document.getElementById('loginOverlay')?.addEventListener('click', (e) => {
+            if (e.target.id === 'loginOverlay') hideLogin();
+        });
+        updateAuthUI();
+
+        window.addEventListener('DOMContentLoaded', carregarOSPorUrl);
+    </script>
+</body>
+</html>

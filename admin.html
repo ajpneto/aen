@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin — AENTECH Gestão de OS</title>
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://aen.pythonanywhere.com/static/favicon.ico" type="image/x-icon">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-accent {
+            color: #d9534f;
+        }
+
+        /* KPI Cards */
+        .kpi-card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .kpi-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+        }
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Status Badges */
+        .badge-status {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .bg-status-pendente { background-color: #fef3c7; color: #b45309; }
+        .bg-status-diagnostico { background-color: #e0f2fe; color: #0369a1; }
+        .bg-status-aguardando { background-color: #ffedd5; color: #c2410c; }
+        .bg-status-aprovado { background-color: #dcfce7; color: #15803d; }
+        .bg-status-reparo { background-color: #f3e8ff; color: #7e22ce; }
+        .bg-status-concluido { background-color: #ccfbf1; color: #0f766e; }
+        .bg-status-entregue { background-color: #e2e8f0; color: #334155; }
+        .bg-status-cancelado { background-color: #fee2e2; color: #b91c1c; }
+
+        /* Tabela */
+        .table-responsive {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            padding: 10px;
+        }
+        .table th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .table td {
+            vertical-align: middle;
+            font-size: 0.85rem;
+        }
+
+        /* Toast Container */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1090;
+        }
+
+        /* Login overlay */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 1rem;
+        }
+        .login-overlay.active { display: flex; }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.25);
+            overflow: hidden;
+        }
+        .login-header {
+            background: #212529;
+            color: #fff;
+            padding: 1rem 1.25rem;
+        }
+        .login-body { padding: 1.25rem; }
+        .app-locked { filter: blur(1px); pointer-events: none; user-select: none; }
+        .modal { z-index: 2050 !important; }
+        .modal-backdrop { z-index: 2040 !important; }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN OVERLAY -->
+    <div id="loginOverlay" class="login-overlay" aria-hidden="true">
+        <div class="login-card">
+            <div class="login-header">
+                <h5 class="mb-1"><i class="fas fa-lock me-2 text-danger"></i>Acesso Restrito</h5>
+                <div class="small text-white-50">Entre com suas credenciais para acessar o painel administrativo.</div>
+            </div>
+            <div class="login-body">
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label small fw-semibold">Usuário</label>
+                        <input type="text" class="form-control" id="loginUsername" autocomplete="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="loginSenha" class="form-label small fw-semibold">Senha</label>
+                        <input type="password" class="form-control" id="loginSenha" autocomplete="current-password" required>
+                    </div>
+                    <div id="loginErro" class="alert alert-danger py-2 small d-none mb-3"></div>
+                    <button type="submit" class="btn btn-danger w-100 fw-semibold" id="btnLogin">
+                        <i class="fas fa-right-to-bracket me-1"></i> Entrar
+                    </button>
+                </form>
+                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                    <span class="small text-muted">Acesso restrito</span>
+                    <button type="button" class="btn btn-sm btn-link text-decoration-none text-secondary p-0" id="btnLoginConfigApi" title="Configurar URL da API">
+                        <i class="fas fa-gear me-1"></i>Servidor API
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appShell">
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="admin.html">
+                <i class="fas fa-screwdriver-wrench brand-accent me-2"></i>
+                <span>AEN<span class="brand-accent">TECH</span></span>
+                <span class="badge bg-secondary ms-2" style="font-size: 0.65rem;">ADMIN</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto align-items-center gap-2">
+                    <li class="nav-item">
+                        <span id="apiStatusBadge" class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1" style="font-size: 0.75rem;">
+                            <i class="fas fa-circle text-success me-1" style="font-size: 8px;"></i> API Conectada
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <span id="usuarioBadge" class="badge bg-light text-dark border px-2 py-1 d-none" style="font-size: 0.75rem;"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a href="ordem-de-servico.html" class="btn btn-danger btn-sm text-white fw-bold">
+                            <i class="fas fa-plus-circle me-1"></i> Nova OS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="consultar-os.html" class="btn btn-outline-light btn-sm" target="_blank">
+                            <i class="fas fa-search me-1"></i> Consultar OS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-secondary btn-sm text-light" data-bs-toggle="modal" data-bs-target="#modalConfig" title="Configurações da API">
+                            <i class="fas fa-gear"></i>
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-warning btn-sm" id="btnLogout" title="Sair">
+                            <i class="fas fa-right-from-bracket"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="container-fluid px-4 py-4">
+
+        <!-- CABEÇALHO DO DASHBOARD -->
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h3 class="fw-bold mb-0">Gestão de Ordens de Serviço</h3>
+                <p class="text-muted small mb-0">Acompanhe fluxo de entrada, aprovação de orçamentos e notificações por e-mail.</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-white border bg-white btn-sm" id="btnRecarregar" title="Atualizar dados">
+                    <i class="fas fa-rotate me-1"></i> Atualizar
+                </button>
+            </div>
+        </div>
+
+        <!-- CARDS KPI DE RESUMO -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">TOTAL DE OS</span>
+                            <h3 class="fw-bold mb-0 mt-1" id="kpiTotal">0</h3>
+                        </div>
+                        <div class="kpi-icon bg-secondary-subtle text-secondary">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">PENDENTE / DIAG</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-primary" id="kpiDiagnostico">0</h3>
+                        </div>
+                        <div class="kpi-icon bg-primary-subtle text-primary">
+                            <i class="fas fa-magnifying-glass"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">AGUARDANDO APR</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-warning" id="kpiAguardando">0</h3>
+                        </div>
+                        <div class="kpi-icon bg-warning-subtle text-warning">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">ORÇ. APROVADO</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-success" id="kpiAprovados">0</h3>
+                        </div>
+                        <div class="kpi-icon bg-success-subtle text-success">
+                            <i class="fas fa-circle-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">CONCLUÍDO</span>
+                            <h3 class="fw-bold mb-0 mt-1 text-info" id="kpiConcluidos">0</h3>
+                        </div>
+                        <div class="kpi-icon bg-info-subtle text-info">
+                            <i class="fas fa-box-check"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card kpi-card p-3 bg-white h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <span class="text-muted small fw-semibold">FATURAMENTO</span>
+                            <h4 class="fw-bold mb-0 mt-1 text-dark" id="kpiFaturamento">R$ 0</h4>
+                        </div>
+                        <div class="kpi-icon bg-success-subtle text-success">
+                            <i class="fas fa-brazilian-real-sign"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILTROS E BUSCA -->
+        <div class="card border-0 shadow-sm p-3 mb-4 bg-white rounded-3">
+            <div class="row g-2 align-items-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                        <input type="text" class="form-control bg-light border-start-0" id="inputBusca" placeholder="Buscar por Cliente, Telefone, OS Nº, Modelo ou IMEI...">
+                    </div>
+                </div>
+                <div class="col-md-4 col-lg-3">
+                    <select class="form-select" id="filtroStatus">
+                        <option value="">Todos os Status</option>
+                        <option value="Pendente">Pendente</option>
+                        <option value="Em Diagnóstico">Em Diagnóstico</option>
+                        <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+                        <option value="Aprovado">Orçamento Aprovado</option>
+                        <option value="Em Reparo">Em Reparo</option>
+                        <option value="Concluído">Concluído</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-lg-2 text-end ms-auto">
+                    <span class="text-muted small" id="contadorRegistros">Carregando...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABELA DE ORDENS DE SERVIÇO -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" id="tabelaOS">
+                <thead>
+                    <tr>
+                        <th>OS Nº</th>
+                        <th>Data</th>
+                        <th>Cliente</th>
+                        <th>Equipamento</th>
+                        <th>Problemas Reportados</th>
+                        <th>Valor (R$)</th>
+                        <th>Status</th>
+                        <th>E-mail</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="listaOS">
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-muted">
+                            <i class="fas fa-spinner fa-spin fa-2x mb-2 d-block"></i>
+                            Carregando Ordens de Serviço...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- MODAL: ATUALIZAR STATUS E ORÇAMENTO -->
+    <div class="modal fade" id="modalStatus" tabindex="-1" aria-labelledby="modalStatusLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fs-6" id="modalStatusLabel"><i class="fas fa-pen-to-square me-2"></i> Atualizar Ordem de Serviço</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="modalOsId">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-muted">Ordem de Serviço:</label>
+                        <div class="fw-bold fs-5" id="modalOsNumero">OS-XXXX</div>
+                        <div class="small text-muted" id="modalClienteAparelho">Cliente | Aparelho</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modalSelectStatus" class="form-label fw-semibold small">Status do Reparo:</label>
+                        <select class="form-select" id="modalSelectStatus">
+                            <option value="Pendente">Pendente</option>
+                            <option value="Em Diagnóstico">Em Diagnóstico</option>
+                            <option value="Aguardando Aprovação">Aguardando Aprovação</option>
+                            <option value="Orçamento Aprovado">Orçamento Aprovado (Dispara E-mail)</option>
+                            <option value="Em Reparo">Em Reparo</option>
+                            <option value="Concluído">Concluído (Pronto p/ Retirada)</option>
+                            <option value="Entregue">Entregue</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modalInputValor" class="form-label fw-semibold small">Valor do Reparo (R$):</label>
+                        <input type="text" class="form-control" id="modalInputValor" placeholder="Ex: 180,00">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="modalInputLaudo" class="form-label fw-semibold small">Laudo Técnico / Observações:</label>
+                        <textarea class="form-control" id="modalInputLaudo" rows="2" placeholder="Diagnóstico do técnico, peças a substituir, etc."></textarea>
+                    </div>
+
+                    <div class="form-check p-3 bg-light rounded border mb-2">
+                        <input class="form-check-input" type="checkbox" id="modalCheckNotificarEmail" checked>
+                        <label class="form-check-label small" for="modalCheckNotificarEmail">
+                            <strong>Notificar cliente por e-mail via SMTP</strong><br>
+                            <span class="text-muted" style="font-size: 11px;">Envia confirmação oficial com valor, garantia de 90 dias e link para contato.</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary btn-sm fw-bold" id="btnSalvarModalStatus">
+                        <i class="fas fa-save me-1"></i> Salvar Alterações
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div><!-- /appShell -->
+
+    <!-- MODAL: CONFIGURAÇÃO DA API -->
+    <div class="modal fade" id="modalConfig" tabindex="-1" aria-labelledby="modalConfigLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title fs-6" id="modalConfigLabel"><i class="fas fa-gear me-2"></i> Configurações da API REST</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="configApiUrl" class="form-label fw-semibold small">Endpoint da API REST Flask:</label>
+                        <input type="text" class="form-control" id="configApiUrl" placeholder="https://aen.pythonanywhere.com">
+                        <div class="form-text small">
+                            Padrão: <code>https://aen.pythonanywhere.com</code>. Para testes locais, use <code>http://localhost:5000</code>.
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2 mb-3">
+                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnTestarConexao">
+                            <i class="fas fa-network-wired me-1"></i> Testar Conexão
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" id="btnResetApiUrl">
+                            Restaurar Padrão
+                        </button>
+                    </div>
+                    <div id="resultadoTesteConexao" class="alert alert-secondary small d-none mb-0"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="btnSalvarConfigApi">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container">
+        <div id="liveToast" class="toast align-items-center border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">Mensagem</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Determinação inteligente da URL da API
+        function getApiUrl() {
+            const saved = localStorage.getItem('AENTECH_API_URL');
+            if (saved) return saved.replace(/\/+$/, '');
+            const host = window.location.hostname;
+            if (!host || host === 'localhost' || host === '127.0.0.1') {
+                return window.location.port === '5000' ? '' : 'http://localhost:5000';
+            }
+            return 'https://aen.pythonanywhere.com';
+        }
+
+        let API_URL = getApiUrl();
+        let listaCompletaOS = [];
+
+        // ===== AUTENTICAÇÃO =====
+        function getAuthToken() {
+            return localStorage.getItem('AENTECH_AUTH_TOKEN') || '';
+        }
+        function setAuthToken(token, username) {
+            if (token) localStorage.setItem('AENTECH_AUTH_TOKEN', token);
+            else localStorage.removeItem('AENTECH_AUTH_TOKEN');
+            if (username) localStorage.setItem('AENTECH_AUTH_USER', username);
+            else localStorage.removeItem('AENTECH_AUTH_USER');
+        }
+        function getAuthUser() {
+            return localStorage.getItem('AENTECH_AUTH_USER') || '';
+        }
+        function authHeaders(extra = {}) {
+            const headers = { ...extra };
+            const token = getAuthToken();
+            if (token) headers['Authorization'] = `Bearer ${token}`;
+            return headers;
+        }
+        async function authFetch(url, options = {}) {
+            const opts = { ...options };
+            opts.headers = authHeaders(options.headers || {});
+            const res = await fetch(url, opts);
+            if (res.status === 401) {
+                setAuthToken('', '');
+                showLogin('Sessão expirada ou inválida. Faça login novamente.');
+            }
+            return res;
+        }
+        function showLogin(message = '') {
+            const overlay = document.getElementById('loginOverlay');
+            const shell = document.getElementById('appShell');
+            overlay.classList.add('active');
+            shell.classList.add('app-locked');
+            const err = document.getElementById('loginErro');
+            if (message) {
+                err.textContent = message;
+                err.classList.remove('d-none');
+            } else {
+                err.classList.add('d-none');
+                err.textContent = '';
+            }
+            updateAuthUI();
+        }
+        function hideLogin() {
+            document.getElementById('loginOverlay').classList.remove('active');
+            document.getElementById('appShell').classList.remove('app-locked');
+            document.getElementById('loginErro').classList.add('d-none');
+            updateAuthUI();
+        }
+        function updateAuthUI() {
+            const user = getAuthUser();
+            const badge = document.getElementById('usuarioBadge');
+            if (user) {
+                badge.textContent = `@${user}`;
+                badge.classList.remove('d-none');
+            } else {
+                badge.classList.add('d-none');
+                badge.textContent = '';
+            }
+        }
+
+        async function fazerLogin(username, senha) {
+            const res = await fetch(`${API_URL}/api/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, senha })
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!res.ok || !data.ok) {
+                throw new Error(data.erro || 'Falha no login.');
+            }
+            setAuthToken(data.token, data.usuario?.username || username);
+            return data;
+        }
+
+        // Toast de Feedback
+        const toastEl = document.getElementById('liveToast');
+        const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+
+        function notify(msg, type = 'success') {
+            const body = document.getElementById('toastMessage');
+            body.textContent = msg;
+            toastEl.className = `toast align-items-center text-white border-0 shadow bg-${type}`;
+            toast.show();
+        }
+
+        // Formatador de Status
+        function getBadgeClass(status) {
+            const s = (status || '').toLowerCase();
+            if (s.includes('pendente')) return 'bg-status-pendente';
+            if (s.includes('diagnóstico')) return 'bg-status-diagnostico';
+            if (s.includes('aguardando')) return 'bg-status-aguardando';
+            if (s.includes('aprovado')) return 'bg-status-aprovado';
+            if (s.includes('reparo')) return 'bg-status-reparo';
+            if (s.includes('concluído')) return 'bg-status-concluido';
+            if (s.includes('entregue')) return 'bg-status-entregue';
+            if (s.includes('cancelado')) return 'bg-status-cancelado';
+            return 'bg-status-pendente';
+        }
+
+        // Carrega KPIs de estatísticas
+        async function carregarStats() {
+            try {
+                const res = await authFetch(`${API_URL}/api/stats`);
+                if (res.status === 401) return;
+                if (!res.ok) throw new Error('Falha ao obter estatísticas');
+                const d = await res.json();
+                if (!d.ok) throw new Error(d.erro || 'Falha ao obter estatísticas');
+                document.getElementById('kpiTotal').textContent = d.total || 0;
+                document.getElementById('kpiDiagnostico').textContent = (d.pendentes || 0) + (d.diagnostico || 0);
+                document.getElementById('kpiAguardando').textContent = d.aguardando_aprovacao || 0;
+                document.getElementById('kpiAprovados').textContent = (d.aprovados || 0) + (d.em_reparo || 0);
+                document.getElementById('kpiConcluidos').textContent = (d.concluidos || 0);
+                document.getElementById('kpiFaturamento').textContent = `R$ ${d.faturamento_estimado || '0,00'}`;
+            } catch (e) {
+                console.warn('Erro ao carregar estatísticas:', e);
+            }
+        }
+
+        // Carrega Lista de Ordens de Serviço
+        async function carregarOrdens() {
+            const tbody = document.getElementById('listaOS');
+            const status = document.getElementById('filtroStatus').value;
+            const busca = document.getElementById('inputBusca').value.trim();
+
+            let url = `${API_URL}/api/os?`;
+            if (status) url += `status=${encodeURIComponent(status)}&`;
+            if (busca) url += `busca=${encodeURIComponent(busca)}&`;
+
+            try {
+                const res = await authFetch(url);
+                if (res.status === 401) return;
+                if (!res.ok) throw new Error(`Status ${res.status}`);
+                const data = await res.json();
+                listaCompletaOS = data.ordens || [];
+                renderizarTabela(listaCompletaOS);
+                document.getElementById('contadorRegistros').textContent = `${listaCompletaOS.length} ordem(ns) encontrada(s)`;
+                document.getElementById('apiStatusBadge').className = 'badge bg-success-subtle text-success border border-success-subtle px-2 py-1';
+                document.getElementById('apiStatusBadge').innerHTML = '<i class="fas fa-circle text-success me-1" style="font-size: 8px;"></i> API Online';
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center py-4 text-danger">
+                            <i class="fas fa-circle-exclamation me-1"></i> Não foi possível conectar à API em <code>${API_URL}</code>.<br>
+                            <small class="text-muted">Verifique se o backend Flask está ativo, autenticado, ou altere o endpoint nas Configurações.</small>
+                        </td>
+                    </tr>
+                `;
+                document.getElementById('apiStatusBadge').className = 'badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1';
+                document.getElementById('apiStatusBadge').innerHTML = '<i class="fas fa-circle text-danger me-1" style="font-size: 8px;"></i> API Offline';
+            }
+        }
+
+        // Renderiza linhas da tabela
+        function renderizarTabela(ordens) {
+            const tbody = document.getElementById('listaOS');
+            if (!ordens.length) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="fas fa-inbox fa-3x mb-2 d-block text-secondary"></i>
+                            Nenhuma Ordem de Serviço encontrada com os filtros atuais.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = ordens.map(o => {
+                const whatsNum = (o.cliente_telefone || '').replace(/\D/g, '');
+                const whatsMsg = encodeURIComponent(`Olá ${o.cliente_nome}! Estamos entrando em contato sobre a sua Ordem de Serviço #${o.os_numero} na AENTECH.`);
+                const whatsLink = whatsNum ? `https://wa.me/55${whatsNum}?text=${whatsMsg}` : '#';
+
+                const problemasPreview = (o.problemas || []).slice(0, 2).map(p =>
+                    `<span class="badge bg-light text-dark border me-1 small">${p}</span>`
+                ).join('') + ((o.problemas || []).length > 2 ? `<span class="badge bg-secondary-subtle text-secondary small">+${o.problemas.length - 2}</span>` : '');
+
+                const emailBadge = o.email_notificado
+                    ? `<span class="badge bg-success-subtle text-success border border-success-subtle" title="Notificado em ${o.email_notificado_em || ''}"><i class="fas fa-check me-1"></i>Enviado</span>`
+                    : (o.cliente_email ? `<span class="badge bg-secondary-subtle text-secondary border">Pendente</span>` : `<span class="badge bg-light text-muted">Sem e-mail</span>`);
+
+                return `
+                    <tr>
+                        <td>
+                            <a href="ordem-de-servico.html?id=${o.id}" class="fw-bold text-decoration-none text-danger" title="Visualizar/Imprimir OS">
+                                ${o.os_numero}
+                            </a>
+                        </td>
+                        <td class="text-nowrap text-muted">${o.data || '-'}</td>
+                        <td>
+                            <div class="fw-semibold">${o.cliente_nome}</div>
+                            <div class="small">
+                                ${o.cliente_telefone ? `
+                                    <a href="${whatsLink}" target="_blank" class="text-success text-decoration-none fw-semibold">
+                                        <i class="fab fa-whatsapp me-1"></i>${o.cliente_telefone}
+                                    </a>
+                                ` : '<span class="text-muted">Sem telefone</span>'}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold">${o.marca || ''} ${o.modelo || 'Não inf.'}</div>
+                            <small class="text-muted">${o.cor ? o.cor + ' | ' : ''}${o.imei1 || 'S/ IMEI'}</small>
+                        </td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-1 align-items-center">
+                                ${problemasPreview || '<span class="text-muted small">Nenhum assinalado</span>'}
+                            </div>
+                        </td>
+                        <td class="fw-bold text-nowrap">
+                            R$ ${o.valor || '0,00'}
+                        </td>
+                        <td>
+                            <span class="badge-status ${getBadgeClass(o.status)}">${o.status}</span>
+                        </td>
+                        <td>${emailBadge}</td>
+                        <td class="text-end text-nowrap">
+                            <a href="ordem-de-servico.html?id=${o.id}&print=1" target="_blank" class="btn btn-outline-secondary btn-sm p-1 px-2" title="Imprimir Folha da OS">
+                                <i class="fas fa-print"></i>
+                            </a>
+                            <button class="btn btn-outline-primary btn-sm p-1 px-2" onclick="abrirModalEdicao(${o.id})" title="Atualizar Status / Orçamento">
+                                <i class="fas fa-pen-to-square"></i>
+                            </button>
+                            <button class="btn btn-outline-success btn-sm p-1 px-2" onclick="aprovarOrcamentoRapido(${o.id}, '${o.os_numero}')" title="Aprovar Orçamento e Enviar E-mail">
+                                <i class="fas fa-check-double"></i>
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm p-1 px-2" onclick="excluirOS(${o.id}, '${o.os_numero}')" title="Excluir OS">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Abre modal para editar status
+        function abrirModalEdicao(id) {
+            const os = listaCompletaOS.find(item => item.id === id);
+            if (!os) return;
+
+            document.getElementById('modalOsId').value = os.id;
+            document.getElementById('modalOsNumero').textContent = os.os_numero;
+            document.getElementById('modalClienteAparelho').textContent = `${os.cliente_nome} | ${os.marca || ''} ${os.modelo || ''}`;
+            document.getElementById('modalSelectStatus').value = os.status || 'Pendente';
+            document.getElementById('modalInputValor').value = os.valor || '';
+            document.getElementById('modalInputLaudo').value = os.laudo_tecnico || '';
+            document.getElementById('modalCheckNotificarEmail').checked = (os.status !== 'Orçamento Aprovado');
+
+            const modal = new bootstrap.Modal(document.getElementById('modalStatus'));
+            modal.show();
+        }
+
+        // Salva alteração de status/orçamento do modal
+        document.getElementById('btnSalvarModalStatus').addEventListener('click', async () => {
+            const id = document.getElementById('modalOsId').value;
+            const status = document.getElementById('modalSelectStatus').value;
+            const valor = document.getElementById('modalInputValor').value.trim();
+            const laudo = document.getElementById('modalInputLaudo').value.trim();
+            const notificar = document.getElementById('modalCheckNotificarEmail').checked;
+
+            const btn = document.getElementById('btnSalvarModalStatus');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Salvando...';
+
+            try {
+                const res = await authFetch(`${API_URL}/api/os/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: status,
+                        valor: valor,
+                        laudo_tecnico: laudo,
+                        notificar_email: notificar
+                    })
+                });
+                if (res.status === 401) return;
+
+                const data = await res.json();
+                if (!res.ok || !data.ok) throw new Error(data.erro || 'Falha ao atualizar OS');
+
+                bootstrap.Modal.getInstance(document.getElementById('modalStatus')).hide();
+
+                let msg = `Ordem de Serviço atualizada para "${status}" com sucesso!`;
+                if (data.email_msg) {
+                    msg += ` (${data.email_msg})`;
+                }
+                notify(msg, 'success');
+
+                carregarOrdens();
+                carregarStats();
+            } catch (err) {
+                notify(err.message, 'danger');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save me-1"></i> Salvar Alterações';
+            }
+        });
+
+        // Aprovação Expressa de Orçamento (1 clique)
+        async function aprovarOrcamentoRapido(id, numero) {
+            if (!confirm(`Deseja aprovar o orçamento da OS ${numero} e enviar notificação por e-mail ao cliente?`)) {
+                return;
+            }
+
+            try {
+                const res = await authFetch(`${API_URL}/api/os/${id}/aprovar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({})
+                });
+                if (res.status === 401) return;
+
+                const data = await res.json();
+                if (!res.ok || !data.ok) throw new Error(data.erro || 'Falha ao aprovar orçamento');
+
+                let msg = `Orçamento da OS ${numero} APROVADO!`;
+                if (data.email_msg) msg += ` — ${data.email_msg}`;
+                notify(msg, 'success');
+
+                carregarOrdens();
+                carregarStats();
+            } catch (err) {
+                notify(err.message, 'danger');
+            }
+        }
+
+        // Excluir OS
+        async function excluirOS(id, numero) {
+            if (!confirm(`Tem certeza que deseja EXCLUIR permanentemente a Ordem de Serviço ${numero}?`)) {
+                return;
+            }
+
+            try {
+                const res = await authFetch(`${API_URL}/api/os/${id}`, { method: 'DELETE' });
+                if (res.status === 401) return;
+                const data = await res.json();
+                if (!res.ok || !data.ok) throw new Error(data.erro || 'Falha ao excluir');
+                notify(`OS ${numero} excluída com sucesso.`, 'secondary');
+                carregarOrdens();
+                carregarStats();
+            } catch (err) {
+                notify(err.message, 'danger');
+            }
+        }
+
+        // Eventos de Busca e Filtro
+        let debounceTimer;
+        document.getElementById('inputBusca').addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(carregarOrdens, 300);
+        });
+
+        document.getElementById('filtroStatus').addEventListener('change', carregarOrdens);
+        document.getElementById('btnRecarregar').addEventListener('click', () => {
+            carregarOrdens();
+            carregarStats();
+            notify('Dados atualizados com sucesso.', 'info');
+        });
+
+        // Configurações da API
+        document.getElementById('configApiUrl').value = API_URL;
+
+        document.getElementById('btnSalvarConfigApi').addEventListener('click', () => {
+            const novaUrl = document.getElementById('configApiUrl').value.trim();
+            localStorage.setItem('AENTECH_API_URL', novaUrl);
+            API_URL = getApiUrl();
+            bootstrap.Modal.getInstance(document.getElementById('modalConfig')).hide();
+            notify('Endpoint da API salvo com sucesso!', 'success');
+            carregarOrdens();
+            carregarStats();
+        });
+
+        document.getElementById('btnResetApiUrl').addEventListener('click', () => {
+            localStorage.removeItem('AENTECH_API_URL');
+            API_URL = getApiUrl();
+            document.getElementById('configApiUrl').value = API_URL;
+            notify('URL da API restaurada para o padrão.', 'info');
+        });
+
+        document.getElementById('btnTestarConexao').addEventListener('click', async () => {
+            const urlTest = document.getElementById('configApiUrl').value.trim().replace(/\/+$/, '');
+            const alerta = document.getElementById('resultadoTesteConexao');
+            alerta.className = 'alert alert-info small';
+            alerta.textContent = 'Testando conexão com a API...';
+            alerta.classList.remove('d-none');
+
+            try {
+                const resp = await fetch(`${urlTest}/api/config`);
+                const data = await resp.json();
+                if (data.ok) {
+                    alerta.className = 'alert alert-success small';
+                    alerta.innerHTML = `<strong>Sucesso!</strong> Conectado à API da ${data.empresa.nome}. SMTP: ${data.smtp_configurado ? 'Configurado' : 'Modo Simulação'}.`;
+                } else {
+                    throw new Error('Resposta inválida');
+                }
+            } catch (e) {
+                alerta.className = 'alert alert-danger small';
+                alerta.textContent = `Falha ao conectar: ${e.message}`;
+            }
+        });
+
+        // Login form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnLogin');
+            const err = document.getElementById('loginErro');
+            const username = document.getElementById('loginUsername').value.trim();
+            const senha = document.getElementById('loginSenha').value;
+            err.classList.add('d-none');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Entrando...';
+            try {
+                await fazerLogin(username, senha);
+                document.getElementById('loginSenha').value = '';
+                hideLogin();
+                notify('Login realizado com sucesso.', 'success');
+                carregarOrdens();
+                carregarStats();
+            } catch (ex) {
+                err.textContent = ex.message || 'Erro no login.';
+                err.classList.remove('d-none');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-right-to-bracket me-1"></i> Entrar';
+            }
+        });
+
+        document.getElementById('btnLogout').addEventListener('click', async () => {
+            try { await fetch(`${API_URL}/api/logout`, { method: 'POST' }); } catch {}
+            setAuthToken('', '');
+            notify('Sessão encerrada.', 'secondary');
+            showLogin();
+        });
+
+        document.getElementById('btnLoginConfigApi')?.addEventListener('click', () => {
+            new bootstrap.Modal(document.getElementById('modalConfig')).show();
+        });
+
+        // Inicialização
+        window.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            if (!getAuthToken()) {
+                showLogin();
+                return;
+            }
+            carregarOrdens();
+            carregarStats();
+        });
+    </script>
+</body>
+</html>

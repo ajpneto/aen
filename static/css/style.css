@@ -1,0 +1,185 @@
+:root {
+    --brand-primary: #0A2540;
+    --brand-accent: #25D366;
+    --brand-light: #f4f7fb;
+    --brand-dark: #061a2e;
+}
+
+* { scroll-behavior: smooth; }
+
+body {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+    color: #1e293b;
+    overflow-x: hidden;
+}
+
+.text-brand-primary { color: var(--brand-primary) !important; }
+.text-brand-accent { color: var(--brand-accent) !important; }
+.bg-brand-primary { background-color: var(--brand-primary) !important; }
+.bg-brand-accent { background-color: var(--brand-accent) !important; }
+.bg-brand-light { background-color: var(--brand-light) !important; }
+
+/* ---------- Navbar ---------- */
+#mainNav {
+    background-color: rgba(10, 37, 64, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 0.8rem 0;
+    transition: all .3s ease;
+}
+#mainNav .nav-link {
+    color: #e2e8f0;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color .2s;
+}
+#mainNav .nav-link:hover { color: var(--brand-accent); }
+
+/* ---------- Hero ---------- */
+.hero-section {
+    min-height: 100vh;
+    padding: 120px 0 80px;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, #0f3a63 100%);
+    position: relative;
+    overflow: hidden;
+}
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: -30%; right: -10%;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(37, 211, 102, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+}
+.hero-content { position: relative; z-index: 2; }
+.hero-circle {
+    width: 380px; height: 380px;
+    border-radius: 50%;
+    background: rgba(37, 211, 102, 0.1);
+    border: 2px dashed rgba(37, 211, 102, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    animation: pulse 4s ease-in-out infinite;
+}
+.hero-circle i {
+    font-size: 10rem;
+    color: var(--brand-accent);
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* ---------- Cards de Serviço ---------- */
+.service-card {
+    border-radius: 18px;
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(10, 37, 64, 0.12) !important;
+}
+.icon-circle {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(37, 211, 102, 0.12);
+    color: var(--brand-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+.icon-circle-lg {
+    width: 90px; height: 90px;
+    border-radius: 50%;
+    background: rgba(10, 37, 64, 0.06);
+    color: var(--brand-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+}
+
+/* ---------- Passos ---------- */
+.step-card { transition: transform .3s; }
+.step-card:hover { transform: translateY(-5px); }
+.step-number {
+    position: absolute;
+    top: 15px; right: 20px;
+    font-size: 2.8rem;
+    font-weight: 800;
+    color: rgba(10, 37, 64, 0.06);
+    line-height: 1;
+}
+
+/* ---------- Avatar / Depoimentos ---------- */
+.avatar-circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--brand-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+/* ---------- Marcas ---------- */
+.brand-pill {
+    padding: 8px 20px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 50px;
+    font-weight: 600;
+    color: #64748b;
+    font-size: .9rem;
+}
+
+/* ---------- FAQ ---------- */
+.accordion-button:not(.collapsed) {
+    background-color: rgba(37, 211, 102, 0.1);
+    color: var(--brand-primary);
+    box-shadow: none;
+}
+.accordion-button:focus { box-shadow: none; }
+
+/* ---------- CTA Final ---------- */
+.cta-final {
+    background: linear-gradient(135deg, var(--brand-primary) 0%, #1a4a7a 100%);
+}
+
+/* ---------- WhatsApp flutuante ---------- */
+.whatsapp-float {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    width: 60px; height: 60px;
+    background: var(--brand-accent);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+    z-index: 999;
+    text-decoration: none;
+    animation: bounce 2s infinite;
+    transition: transform .2s;
+}
+.whatsapp-float:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 768px) {
+    .hero-section { padding: 100px 0 60px; text-align: center; }
+    .display-4 { font-size: 2rem; }
+    .whatsapp-float { width: 54px; height: 54px; font-size: 1.6rem; }
+}
